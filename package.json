@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "start": "npx --yes http-server . -p 5500 -a 127.0.0.1 -c-1",
+    "start": "npx --yes http-server . -p 5500 -a 127.0.0.1 -c-1",
     "build:css": "postcss styles.css -o dist/styles.css",
     "watch:css": "postcss styles.css -o dist/styles.css --watch"
   },
@@ -13,12 +13,22 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.3.8",
-    "bulma": "^1.0.4"
+    "bulma": "^1.0.4",
+    "jquery": "^3.7.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
     "postcss-import": "^16.1.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frew00/EYEWEAR-E-SHOP.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/frew00/EYEWEAR-E-SHOP/issues"
+  },
+  "homepage": "https://github.com/frew00/EYEWEAR-E-SHOP#readme"
 }

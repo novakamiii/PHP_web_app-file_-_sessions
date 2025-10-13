@@ -197,7 +197,7 @@ include 'misc/headernavfooter.php';
  <!-- FOOTER -->
   <footer class="mt-auto bg-black text-center py-2 text-secondary small">
     © 2025 Weyewear | Designed for demo purposes
-  </footer>
+  </footerr>
 
 </body>
 

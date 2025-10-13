@@ -1,19 +1,24 @@
+<?php
+	include 'misc/headernavfooter.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Your Cart - WEyewear</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>WEyewear - Home</title>
 	<link href="styles.css" rel="stylesheet">
+
+	<script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
 </head>
+
 <body>
-	<nav class="navbar navbar-dark bg-dark">
-		<div class="container">
-			<a class="navbar-brand" href="bootstrap.html">WEyewear</a>
-			<a class="nav-link text-white" href="products.html">Continue shopping</a>
-		</div>
-	</nav>
+	<!-- NAVBAR -->
+	<?php
+	navbarcall();
+	?>
 
 	<main class="container py-4">
 		<h2>Your Cart</h2>
@@ -27,6 +32,11 @@
 		</div>
 	</main>
 
+	<!-- FOOTER -->
+  <footer class="mt-auto bg-black text-center py-2 text-secondary small">
+    © 2025 Weyewear | Designed for demo purposes
+  </footer>
 	<script src="cart-page.js"></script>
 </body>
+
 </html>

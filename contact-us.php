@@ -1,13 +1,26 @@
+<?php
+include 'misc/headernavfooter.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - WEyewear</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>WEyewear - Contact</title>
     <link href="styles.css" rel="stylesheet">
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
 </head>
+
 <body>
+    <!-- NAVBAR -->
+    <?php
+    navbarcall();
+    ?>
+
     <!-- Contact Form Section -->
     <section class="py-5">
         <div class="container">
@@ -18,48 +31,48 @@
                         <!-- Full Name -->
                         <div class="mb-3">
                             <label for="fullName" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" name="fullName" 
-                                   onblur="this.value = this.value.trim()"
-                                   required pattern="[A-Za-z\s]+" 
-                                   title="Please enter only letters and spaces">
+                            <input type="text" class="form-control" id="fullName" name="fullName"
+                                onblur="this.value = this.value.trim()"
+                                required pattern="[A-Za-z\s]+"
+                                title="Please enter only letters and spaces">
                             <div class="invalid-feedback">Please enter a valid name</div>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   onblur="this.value = this.value.trim()"
-                                   required>
+                            <input type="email" class="form-control" id="email" name="email"
+                                onblur="this.value = this.value.trim()"
+                                required>
                             <div class="invalid-feedback">Please enter a valid email</div>
                         </div>
 
                         <!-- Phone Number -->
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" 
-                                   onblur="this.value = this.value.trim()"
-                                   required pattern="[0-9]+" 
-                                   minlength="10" maxlength="11"
-                                   title="Please enter only numbers (10-11 digits)">
+                            <input type="tel" class="form-control" id="phone" name="phone"
+                                onblur="this.value = this.value.trim()"
+                                required pattern="[0-9]+"
+                                minlength="10" maxlength="11"
+                                title="Please enter only numbers (10-11 digits)">
                             <div class="invalid-feedback">Please enter a valid phone number (10-11 digits)</div>
                         </div>
 
                         <!-- Subject -->
                         <div class="mb-3">
                             <label for="subject" class="form-label">Subject</label>
-                            <input type="text" class="form-control" id="subject" name="subject" 
-                                   onblur="this.value = this.value.trim()"
-                                   required>
+                            <input type="text" class="form-control" id="subject" name="subject"
+                                onblur="this.value = this.value.trim()"
+                                required>
                             <div class="invalid-feedback">Please enter a subject</div>
                         </div>
 
                         <!-- Message -->
                         <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
-                            <textarea class="form-control" id="message" name="message" 
-                                      onblur="this.value = this.value.trim()"
-                                      rows="5" required></textarea>
+                            <textarea class="form-control" id="message" name="message"
+                                onblur="this.value = this.value.trim()"
+                                rows="5" required></textarea>
                             <div class="invalid-feedback">Please enter your message</div>
                         </div>
 
@@ -73,6 +86,10 @@
         </div>
     </section>
 
+    <!-- FOOTER -->
+    <footer class="mt-auto bg-black text-center py-2 text-secondary small">
+        © 2025 Weyewear | Designed for demo purposes
+    </footer>
     <script>
         function validateForm(event) {
             event.preventDefault(); // Prevent form from submitting by default
@@ -124,4 +141,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

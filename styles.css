@@ -366,12 +366,24 @@ h6 {
 }
 
 .about-statement {
-    /* Fade text only via rgba color so children (images) remain unaffected */
-    color: 
-    rgba(139, 133, 133, 0.6); /* change alpha (0.0 - 1.0) to adjust fading */
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    text-align: justify;
+  text-align: justify;
+  line-height: 1.7;
+  color: #ccc;
+}
+.info-list li {
+  color: #fff;
+  font-weight: 600;
+  margin: 6px 0;
+  letter-spacing: 0.5px;
+}
+
+.horizontal-line {
+  width: 60%;
+  height: 2px;
+  background-color: #444;
+  margin-top: 30px;
+  border-radius: 2px;
+  opacity: 0.6;
 }
 .eme-sentence{
     font-family: Cormorant Garamond, serif;

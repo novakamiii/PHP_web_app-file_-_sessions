@@ -7,13 +7,9 @@
     #$db_user = "root";
     #$db_pass = 'paulo';
 
-    #Your Credentials Here FORMAT: {NAME's SQL's Credentials}
-    #COPY THIS THREE THEN UNCOMMENT, DO NOT DIRECTLY WRITE.
-    
-    #$db_server = "localhost";
-    #$db_user = "";
-    #$db_pass = "";
-
+    $db_server = "localhost:3307";
+    $db_user = "root";
+    $db_pass = "";
 
     #Keep this intact.
     $db_name = "shop";

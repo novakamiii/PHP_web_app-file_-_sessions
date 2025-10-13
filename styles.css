@@ -1,0 +1,438 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import url('https://fonts.googleapis.com/css2?family=Corinthia&family=Montserrat:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap');
+
+*{
+    box-sizing: border-box;
+}
+header{
+    background-color: #ffffff;
+    padding: 0.5rem;
+    color: rgb(39, 39, 39);
+    text-align: center;
+    padding-top:300px;
+    width: 100vw;
+    min-height: 80vh;
+    margin-bottom: 0.5rem;
+    font-size: large;
+}
+.navbar{
+    width:100vw;
+
+}
+.nav-item{
+    font-size: small;
+    margin-right:0.5rem;
+   
+}
+
+.display-4 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+.prescription-section {
+    width: 100vw;      
+    min-height: 40vh;  
+    margin: 0;
+    padding: 0;
+}
+h1{
+    font-size: 7rem;
+    font-weight: 300;
+    margin-top: 7rem;
+    font-family: Playfair Display, serif;
+}
+
+/* PINAKA HOME FONT NG WEYEWEAR */
+.display-10 {
+    font-family: 'Corinthia', 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 590;
+    letter-spacing: 0.05em;
+    /* subtle drop shadow for better contrast on backgrounds */
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.45);
+}
+.card-img-top {
+    height:350px;
+    object-fit: cover;
+}
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 10;
+    color: white !important;
+    font-family: 'Corinthia', 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+.py-5 {
+    max-width: 100%;
+    height: auto;
+}
+    
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    font-family: Cormorant Garamond, serif;
+    
+}
+.feat{
+    font-family: Cormorant Garamond, serif;
+    font-size: 2.25rem;
+    font-weight: 400;
+}
+.btn{
+    background-color: #171717;
+    border: none;
+    font-family: Cormorant Garamond, serif;
+}
+footer{
+    background-color: #000000;
+    color: rgb(178, 174, 174);
+    text-align: center;
+    padding: 0.1rem;
+    margin-top: 0;
+    font-size: small;
+}
+.hstack {
+    background-color: #ffffff;
+    padding: 1rem;
+    justify-content: center;
+    font-family: Cormorant Garamond, serif;
+    font-size: 1.6rem;
+    margin-right:50px;
+    width:100vw;
+}
+.p-2 { /*sa linya hstack*/
+    margin-right: 2rem;
+    border-color: black;
+    text-align: center;
+}
+.down{
+    background-color: #000000;
+    padding: 1rem;
+    margin-top:0;
+}
+h4{ 
+    padding:0;
+    margin-bottom:0;
+    font-weight: 600;
+    font-family: Playfair Display, serif;
+    color: rgb(178, 174, 174);
+    text-align: center;
+}
+.list-group{
+    padding:0;
+    margin:0;
+    color:#000000
+
+}
+.list-group-item {
+    background-color: #000000;
+    color: rgb(178, 174, 174);
+    border: none;
+    font-size: small;
+    text-align: left;
+    padding: 0;
+    font-family:Helvetica Neue Bold, sans-serif;
+    font-weight: bold;
+}
+/*Products*/
+.product { 
+    width:100vw;
+    min-height:60vh;
+
+}
+.productdisplay-10{
+    font-family: 'Corinthia', 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 590;
+    letter-spacing: 0.05em;
+    /* subtle drop shadow for better contrast on backgrounds */
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.45);
+    margin-top: 3rem;
+}
+.lead2{
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1.5;
+    font-family: Cormorant Garamond, serif;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.45);
+}
+.Vision {
+     max-height: 300px;
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    padding: 30px;
+    display: flex;
+    gap: 16px;
+}
+.Vision::-webkit-scrollbar{
+    width: 0;
+}
+.vis {
+    font-family: Cormorant Garamond, serif;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+.vis-tag{
+    margin-left:35px;
+    font-family:Cormorant Garamond, serif;
+    margin-bottom: 10px;
+}
+.Vision-item{
+    margin-left:20px;
+    font-family:Cormorant Garamond, serif;
+    margin-bottom: 10px;
+}
+.protection {
+    max-height: 300px;
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    padding: 30px;
+    display: flex;
+    gap: 16px;
+}
+.protection::-webkit-scrollbar{
+    width: 0;
+}
+.pro-tag{
+    margin-left:35px;
+    font-family:Cormorant Garamond, serif;
+    margin-bottom: 10px;
+}
+.pro{
+    font-family: Cormorant Garamond, serif;
+    margin-bottom: 1rem;
+    font-size: 2.25rem;
+}
+.protection-item{
+    margin-left:20px;
+    font-family:Cormorant Garamond, serif;
+    margin-bottom: 10px;
+}
+
+.sunglasses {
+    max-height: 300px;
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    padding: 30px;
+    display: flex;
+    gap: 16px;
+}
+.sunglasses::-webkit-scrollbar{
+    width: 0;
+}
+.sun-tag{
+    margin-left:35px;
+    font-family:Cormorant Garamond, serif;
+    margin-bottom: 10px;
+}
+.sun{
+    font-family: Cormorant Garamond, serif;
+    margin-bottom: 1rem;
+    font-size: 2.25rem;
+}
+.sunglasses-item{
+    margin-left:20px;
+    font-family:Cormorant Garamond, serif;
+    margin-bottom: 10px;
+}
+.Fashionbox{
+     max-height: 300px;
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    padding: 30px;
+    display: flex;
+    gap: 16px;
+}
+.Fashionbox::-webkit-scrollbar{
+    width: 0;
+}
+.Fashion-tag{
+    margin-left:25px;
+    font-family:Cormorant Garamond, serif;
+    margin-bottom: 10px;
+}
+.Fashion-title{
+    font-family: Cormorant Garamond, serif;
+    margin-bottom: 1rem;
+    font-size: 2.25rem;
+}
+.Fashion-item{
+    margin-left:25px;
+    font-family:Cormorant Garamond, serif;
+    margin-bottom: 10px;
+}
+
+/* ABOUT */
+.lead3{
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1.5;
+    font-family: Cormorant Garamond, serif;
+
+}
+.carousel-inner {
+    width: 90vw;
+    min-height: 80vh;
+    margin-left: 100px;
+    margin-top:300px;
+
+    
+}
+.carousel-item {
+    width: 40vw;
+    height: 50vh;
+    object-fit: cover;
+    padding-bottom: 3rem;
+    margin-right:800px;
+    margin-top:10px;
+    margin-bottom:350px;
+    margin-right:800px;
+  
+    
+}
+.carousel-item img {
+    max-width: 100%;
+    height: auto;
+}
+.carousel-slide {
+  
+    max-height: 90vh;
+    padding-top: 0;
+    margin-right:800px;
+    margin-top: 500px;
+}
+.Aboutdisplay-5{
+    margin-bottom: 1rem;
+    margin-top:0;
+
+}
+.Aboutmami {
+    background-color: #ffffff;
+    padding: 0.5rem;
+    color: rgb(39, 39, 39);
+    text-align: center;
+    padding-top:2rem;
+    width: 100vw;
+    min-height: 10vh;
+    margin-bottom: 2rem;
+    font-size: large;
+
+}
+.carouselauto{
+    width:50vw;
+    height:90vh;
+    
+}
+h6 {
+    font-family: Cormorant Garamond, serif;
+    font-size: 3.5rem;
+    font-weight: 300;
+    margin-top:40px;
+    margin-bottom:-300px;
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom:0;
+    width:100vw;
+}
+/*aboutus*/
+.down{
+    padding-top:7rem;
+}
+
+.text-justify mb-4{
+    font-family: 'Corinthia', 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    margin-top: 100px;
+    margin-bottom:0;
+    padding-top: 0;
+    padding-bottom:0;
+    background-color: #ffffff;
+    width:30vw;
+    text-align:left;
+    margin-left: 400px;
+    align-items: center;
+   
+  
+}
+.text-justify mb-4{
+    font-family: 'Corinthia', 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+    width: 30vw;
+    margin-left: 400px;
+    padding-top: 3rem;
+    margin-top: -500px;
+    align-items: center;
+}
+
+.about-statement {
+    /* Fade text only via rgba color so children (images) remain unaffected */
+    color: 
+    rgba(139, 133, 133, 0.6); /* change alpha (0.0 - 1.0) to adjust fading */
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+.eme-sentence{
+    font-family: Cormorant Garamond, serif;
+    font-size: 1rem;
+    font-weight: 300;
+    margin-left: 400px;
+    width: 20vw;
+    align-items: center;
+    margin-top:0.5rem;
+    text-align: justify;
+}
+.collection-img-1{
+    margin-left: 800px;
+    padding-top: 40px;
+    padding-bottom:20px;
+    max-width: 100%;
+    height: auto;
+    width: 70vw;
+}
+.emefy{
+    text-align: center;
+}
+
+.emefygaming {
+    margin-left: 250px;
+    margin-top: -400px;
+    font-family: Cormorant Garamond, serif;
+    
+
+}
+.emefy-sentence{
+        margin-top:0.5rem;
+        margin-bottom:300px;
+        margin-left:250px;
+        width:25vw;
+}
+.collection-img-2{
+ margin-left: 200px;
+    padding-top: 40px;
+    padding-bottom:20px;
+    max-width: 100%;
+    height: auto;
+    width: 70vw;
+}
+
+.emefe{
+    text-align: right; 
+}
+.emefegaming{
+    margin-left: 750px;
+    margin-top: -400px;
+    font-family: Cormorant Garamond, serif; 
+}
+.emefe-sentence{
+        margin-top:0.5rem;
+        margin-bottom:300px;
+        margin-left:700px;
+        width:25vw;
+}
+
+/* Cart page styles */
+#cart-page-items .list-group-item img{ width:64px; height:64px; object-fit:cover; border-radius:6px }
+#cart-page-items .list-group-item .flex-fill{ margin-left:12px }
+#cart-page-items .list-group-item{ gap:12px }

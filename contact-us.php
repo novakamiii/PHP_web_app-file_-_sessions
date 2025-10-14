@@ -6,140 +6,130 @@ include 'misc/headernavfooter.php';
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEyewear - Contact</title>
-    <link href="styles.css" rel="stylesheet">
-
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEyewear - Contact</title>
+  <link href="styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="login-modal.js"></script>
 </head>
 
 <body>
-    <!-- NAVBAR -->
-    <?php
-    navbarcall();
-    ?>
+  <!-- NAVBAR -->
+  <?php navbarcall(); ?>
 
-    <!-- Contact Form Section -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">Contact Us</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form id="contactForm" class="p-4 border rounded shadow-sm" onsubmit="return validateForm(event)">
-                        <!-- Full Name -->
-                        <div class="mb-3">
-                            <label for="fullName" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" name="fullName"
-                                onblur="this.value = this.value.trim()"
-                                required pattern="[A-Za-z\s]+"
-                                title="Please enter only letters and spaces">
-                            <div class="invalid-feedback">Please enter a valid name</div>
-                        </div>
-
-                        <!-- Email -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email"
-                                onblur="this.value = this.value.trim()"
-                                required>
-                            <div class="invalid-feedback">Please enter a valid email</div>
-                        </div>
-
-                        <!-- Phone Number -->
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" id="phone" name="phone"
-                                onblur="this.value = this.value.trim()"
-                                required pattern="[0-9]+"
-                                minlength="10" maxlength="11"
-                                title="Please enter only numbers (10-11 digits)">
-                            <div class="invalid-feedback">Please enter a valid phone number (10-11 digits)</div>
-                        </div>
-
-                        <!-- Subject -->
-                        <div class="mb-3">
-                            <label for="subject" class="form-label">Subject</label>
-                            <input type="text" class="form-control" id="subject" name="subject"
-                                onblur="this.value = this.value.trim()"
-                                required>
-                            <div class="invalid-feedback">Please enter a subject</div>
-                        </div>
-
-                        <!-- Message -->
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Message</label>
-                            <textarea class="form-control" id="message" name="message"
-                                onblur="this.value = this.value.trim()"
-                                rows="5" required></textarea>
-                            <div class="invalid-feedback">Please enter your message</div>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-dark px-5">Send Message</button>
-                        </div>
-                    </form>
-                </div>
+  <!-- Contact Form Section -->
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Contact Us</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <form id="contact-form" class="p-4 border rounded shadow-sm">
+            
+            <!-- Name -->
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name" name="name">
+              <div id="nameError" class="error-message text-danger small mt-1" style="display:none;"></div>
             </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="text" class="form-control" id="email" name="email">
+              <div id="emailError" class="error-message text-danger small mt-1" style="display:none;"></div>
+            </div>
+
+            <!-- Message -->
+            <div class="mb-3">
+              <label for="message" class="form-label">Message</label>
+              <textarea class="form-control" id="message" name="message" rows="5"></textarea>
+              <div id="messageError" class="error-message text-danger small mt-1" style="display:none;"></div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+              <button type="submit" class="btn btn-dark px-5">Send Message</button>
+            </div>
+          </form>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- FOOTER -->
-    <footer class="mt-auto bg-black text-center py-2 text-secondary small">
-        © 2025 Weyewear | Designed for demo purposes
-    </footer>
-    <script>
-        function validateForm(event) {
-            event.preventDefault(); // Prevent form from submitting by default
+  <!-- FOOTER -->
+  <footer class="mt-auto bg-black text-center py-2 text-secondary small">
+    © 2025 Weyewear | Designed for demo purposes
+  </footer>
 
-            // Get all form inputs
-            const fullName = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const subject = document.getElementById('subject').value.trim();
-            const message = document.getElementById('message').value.trim();
+  <script>
+    $(document).ready(function () {
 
-            // Validate phone number
-            if (!/^[0-9]{10,11}$/.test(phone)) {
-                alert('Please enter a valid phone number (10-11 digits)');
-                return false;
-            }
+      // Allow only letters and spaces for name
+      $("#name").on("keypress", function (e) {
+        let regex = /^[a-zA-Z\s]+$/;
+        let char = String.fromCharCode(e.which);
+        if (!regex.test(char)) {
+          e.preventDefault();
+        }
+      });
 
-            // Validate full name
-            if (!/^[A-Za-z\s]+$/.test(fullName)) {
-                alert('Please enter a valid name (letters and spaces only)');
-                return false;
-            }
+      // Allow only alphanumeric + _ @ . - for email
+      $("#email").on("keypress", function (e) {
+        let regex = /^[a-zA-Z0-9_@.\-]+$/;
+        let char = String.fromCharCode(e.which);
+        if (!regex.test(char)) {
+          e.preventDefault();
+        }
+      });
 
-            // Check if any field is empty after trimming
-            if (!fullName || !email || !phone || !subject || !message) {
-                alert('Please fill in all fields');
-                return false;
-            }
+      // Submit validation
+      $("#contact-form").on("submit", function (e) {
+        e.preventDefault();
 
-            // If all validations pass, you can submit the form
-            alert('Form submitted successfully!');
-            document.getElementById('contactForm').reset();
-            return true;
+        let name = $("#name").val().trim();
+        let email = $("#email").val().trim();
+        let message = $("#message").val().trim();
+        let isValid = true;
+
+        $(".error-message").hide();
+
+        // Name validation
+        if (name === "") {
+          $("#nameError").text("This field is required").show();
+          isValid = false;
         }
 
-        // Add trim functionality to all inputs when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    // Remove leading/trailing spaces as user types
-                    if (this.value.startsWith(' ') || this.value.endsWith(' ')) {
-                        this.value = this.value.trim();
-                    }
-                });
-            });
-        });
-    </script>
+        // Email validation
+        const emailPattern = /^[a-zA-Z0-9_.\-]+@[a-zA-Z0-9_.\-]+\.[a-zA-Z]{2,}$/;
+        if (email === "") {
+          $("#emailError").text("This field is required").show();
+          isValid = false;
+        } else if (!emailPattern.test(email)) {
+          $("#emailError").text("Please enter a valid email address").show();
+          isValid = false;
+        }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        // Message validation
+        if (message === "") {
+          $("#messageError").text("This field is required").show();
+          isValid = false;
+        }
+
+        // If all valid
+        if (isValid) {
+          $("#contact-form").before(
+            $("<div class='alert alert-success text-center'>Form submitted successfully!</div>")
+              .fadeOut(3000)
+          );
+          $("#contact-form")[0].reset();
+        }
+      });
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

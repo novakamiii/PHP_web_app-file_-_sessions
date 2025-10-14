@@ -23,4 +23,5 @@
     } catch (mysqli_sql_exception $e) {
         $e = addslashes(str_replace(array("\r", "\n"), ' ', $e->getMessage()));
         echo "<script>alert(\"Database connection has failed! Reason: $e\");</script>";
-}
+    }
+?>

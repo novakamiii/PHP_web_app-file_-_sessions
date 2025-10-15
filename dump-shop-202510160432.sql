@@ -78,7 +78,7 @@ INSERT INTO `products` VALUES
 (4,'korange',67.00,'vision',273,NULL,'korange','2025-10-14 01:21:09'),
 (5,'one',79.00,'vision',122,NULL,'one','2025-10-14 01:21:57'),
 (6,'masahiro',59.00,'vision',90,NULL,'masahiro','2025-10-14 01:22:22'),
-(7,'Aria',68.00,'vision',122,NULL,'aria','2025-10-14 01:32:37'),
+(7,'Aria',68.00,'vision',122,'Elegant vision correction glasses designed for everyday comfort and style.Features premium materials and precision craftsmanship for optimal vision clarity. Perfect for both professional and casual settings.','aria','2025-10-14 01:32:37'),
 (8,'Cappture',95.00,'protection',331,NULL,'cappture','2025-10-14 01:50:05'),
 (9,'G-fly',105.00,'protection',22,NULL,'g-fly','2025-10-14 01:50:41'),
 (10,'Copper',130.00,'protection',130,NULL,'copper','2025-10-14 01:53:44'),
@@ -145,4 +145,4 @@ commit;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-10-14  3:37:50
+-- Dump completed on 2025-10-16  4:32:14

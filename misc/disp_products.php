@@ -9,6 +9,8 @@ function displayVisionCorrection()
     $query = "SELECT * FROM products WHERE category = 'vision'";
     $result = mysqli_query($conn, $query);
 
+    echo "<script>console.log(\"Caregory: Vision Correction\");</script>";
+
     while ($row = mysqli_fetch_assoc($result)) {
         $prod_name = $row['prod_name'];
         $price = $row['price'];
@@ -22,7 +24,7 @@ function displayVisionCorrection()
                          <img src="$img.jpg" class="vision-img" alt="$prod_name" style="width:200px;height:200px;">
                          <p class="vis-tag">$prod_name<span style="margin-left: 50px;">₱$price</span></p> 
                          <div class="text-center">
-                         <a href="#" class="btn btn-secondary w-70">Add to Cart</a>
+                         <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-70">View</a>
                         </div>
                     </div>
                     <script>console.log("Displaying: $prod_name");</script>
@@ -40,6 +42,8 @@ function displayProtection()
     $query = "SELECT * FROM products WHERE category = 'protection'";
     $result = mysqli_query($conn, $query);
 
+    echo "<script>console.log(\"Category: Protection \");</script>";
+
     while ($row = mysqli_fetch_assoc($result)) {
         $prod_name = $row['prod_name'];
         $price = $row['price'];
@@ -53,7 +57,7 @@ function displayProtection()
                         <img src="$img.jpg" class="protection-img" alt="$prod_name" style="width:200px;height:200px;">
                         <p class="pro-tag">$prod_name<span style="margin-left: 50px;">₱$price</span></p> 
                         <div class="text-center">
-                        <a href="#" class="btn btn-secondary w-20 ">Add to Cart</a>
+                        <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-20 ">View</a>
                         </div>
                     </div>
                     <script>console.log("Displaying: $prod_name");</script>
@@ -71,6 +75,8 @@ function displaySunglasses()
     $query = "SELECT * FROM products WHERE category = 'sunglasses'";
     $result = mysqli_query($conn, $query);
 
+    echo "<script>console.log(\"Category: Sunglasses \");</script>";
+
     while ($row = mysqli_fetch_assoc($result)) {
         $prod_name = $row['prod_name'];
         $price = $row['price'];
@@ -84,7 +90,7 @@ function displaySunglasses()
                         <img src="$img.jpg" class="sunglasses-img" alt="$prod_name" style="width:200px;height:200px;">
                         <p class="sun-tag">$prod_name<span style="margin-left: 50px;">₱$price</span></p> 
                         <div class="text-center">
-                        <a href="#" class="btn btn-secondary w-20 ">Add to Cart</a>
+                        <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-20 ">View</a>
                         </div>
                     </div>
                     <script>console.log("Displaying: $prod_name");</script>
@@ -102,6 +108,8 @@ function displayFashion()
     $query = "SELECT * FROM products WHERE category = 'fashion'";
     $result = mysqli_query($conn, $query);
 
+    echo "<script>console.log(\"Category: Fashion\");</script>";
+
     while ($row = mysqli_fetch_assoc($result)) {
         $prod_name = $row['prod_name'];
         $price = $row['price'];
@@ -115,7 +123,7 @@ function displayFashion()
                         <img src="$img.jpg" class="Fashion-img" alt="$prod_name" style="width:200px;height:200px;">
                         <p class="Fashion-tag">$prod_name<span style="margin-left: 55px;">₱$price</span></p> 
                         <div class="text-center">
-                        <a href="#" class="btn btn-secondary w-20 ">Add to Cart</a>
+                        <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-20 ">View</a>
                         </div>
                     </div>
                     <script>console.log("Displaying: $prod_name");</script>

@@ -1,5 +1,6 @@
 <?php
 include 'misc/headernavfooter.php';
+include 'misc/product_page_handler.php';
 ?>
 
 <!DOCTYPE html>
@@ -21,121 +22,11 @@ include 'misc/headernavfooter.php';
   navbarcall();
   ?>
 
-  <!-- BREADCRUMB -->
-  <nav aria-label="breadcrumb" class="breadcrumb-nav py-3 bg-dark">
-    <div class="container">
-      <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="index.php" class="text-light">Home</a></li>
-        <li class="breadcrumb-item"><a href="products.php" class="text-light">Products</a></li>
-        <li class="breadcrumb-item active text-light" aria-current="page" id="productCategory">Category</li>
-      </ol>
-    </div>
-  </nav>
-
   <!-- PRODUCT DETAILS SECTION -->
   <section class="product-details py-5 bg-dark">
-    <div class="container">
-      <div class="row">
-        <!-- Product Images -->
-        <div class="col-lg-6 mb-4">
-          <div class="product-image-container">
-            <!-- Main Product Image -->
-            <div class="main-image mb-3">
-              <img src="img/products/vision/aria.jpg" class="img-fluid rounded product-main-image" alt="Product Image" id="mainProductImage">
-            </div>
-            
-            <!-- Thumbnail Images -->
-            <div class="thumbnail-images">
-              <div class="row g-2">
-                <div class="col-3">
-                  <img src="img/products/vision/aria.jpg" class="img-fluid rounded thumbnail-img active" alt="Product View 1" onclick="changeMainImage(this.src)">
-                </div>
-                <div class="col-3">
-                  <img src="img/products/vision/aria.jpg" class="img-fluid rounded thumbnail-img" alt="Product View 2" onclick="changeMainImage(this.src)">
-                </div>
-                <div class="col-3">
-                  <img src="img/products/vision/aria.jpg" class="img-fluid rounded thumbnail-img" alt="Product View 3" onclick="changeMainImage(this.src)">
-                </div>
-                <div class="col-3">
-                  <img src="img/products/vision/aria.jpg" class="img-fluid rounded thumbnail-img" alt="Product View 4" onclick="changeMainImage(this.src)">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product Information -->
-        <div class="col-lg-6">
-          <div class="product-info">
-            <!-- Product Title -->
-            <h1 class="product-title mb-3" id="productTitle">Classic Aria</h1>
-            
-            <!-- Product Category -->
-            <p class="product-category mb-3">
-              <span class="badge bg-secondary" id="productCategoryBadge">Vision Correction</span>
-            </p>
-            
-            <!-- Product Price -->
-            <div class="product-price mb-4">
-              <span class="current-price" id="productPrice">₱1,500</span>
-              <span class="original-price text-muted ms-2" id="originalPrice" style="display: none;">₱2,000</span>
-              <span class="discount-badge bg-danger ms-2" id="discountBadge" style="display: none;">25% OFF</span>
-            </div>
-            
-            <!-- Product Description -->
-            <div class="product-description mb-4">
-              <h5>Description</h5>
-              <p id="productDescription">
-                Elegant vision correction glasses designed for everyday comfort and style. 
-                Features premium materials and precision craftsmanship for optimal vision clarity.
-                Perfect for both professional and casual settings.
-              </p>
-            </div>
-
-            <!-- Product Features -->
-            <div class="product-features mb-4">
-              <h5>Features</h5>
-              <ul class="feature-list">
-                <li><i class="fas fa-check text-success me-2"></i>Premium lens material</li>
-                <li><i class="fas fa-check text-success me-2"></i>Anti-reflective coating</li>
-                <li><i class="fas fa-check text-success me-2"></i>UV protection</li>
-                <li><i class="fas fa-check text-success me-2"></i>Lightweight frame</li>
-                <li><i class="fas fa-check text-success me-2"></i>Comfortable nose pads</li>
-              </ul>
-            </div>
-
-            <!-- Size Selection -->
-            <div class="size-selection mb-4">
-              <h5>Frame Size</h5>
-              <div class="size-options">
-                <button class="btn btn-outline-light size-btn active" data-size="small">Small</button>
-                <button class="btn btn-outline-light size-btn" data-size="medium">Medium</button>
-                <button class="btn btn-outline-light size-btn" data-size="large">Large</button>
-              </div>
-            </div>
-
-            <!-- Quantity Selection -->
-            <div class="quantity-selection mb-4">
-              <h5>Quantity</h5>
-              <div class="quantity-controls d-flex align-items-center">
-                <button class="btn btn-outline-light" onclick="decreaseQuantity()">-</button>
-                <input type="number" class="form-control quantity-input mx-2" value="1" min="1" max="10" id="quantityInput">
-                <button class="btn btn-outline-light" onclick="increaseQuantity()">+</button>
-              </div>
-            </div>
-
-            <!-- Stock Status -->
-            <div class="stock-status mb-4">
-              <span class="stock-indicator text-success" id="stockStatus">
-                <i class="fas fa-check-circle me-2"></i>In Stock (15 available)
-              </span>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-              <button class="btn btn-primary btn-lg me-3" onclick="addToCart()">
-                <i class="fas fa-cart-plus me-2"></i>Add to Cart
-              </button>
+    <?php 
+      prodDetails();
+    ?>
               <button class="btn btn-outline-light btn-lg me-3" onclick="addToWishlist()">
                 <i class="fas fa-heart me-2"></i>Add to Wishlist
               </button>
@@ -455,29 +346,29 @@ include 'misc/headernavfooter.php';
     // Product page functionality
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize product data (replace with actual data from database)
-      const productData = {
-        id: 1,
-        name: "Classic Aria",
-        category: "Vision Correction",
-        price: 1500,
-        originalPrice: 2000,
-        discount: 25,
-        description: "Elegant vision correction glasses designed for everyday comfort and style. Features premium materials and precision craftsmanship for optimal vision clarity. Perfect for both professional and casual settings.",
-        images: [
-          "img/products/vision/aria.jpg",
-          "img/products/vision/aria.jpg",
-          "img/products/vision/aria.jpg",
-          "img/products/vision/aria.jpg"
-        ],
-        stock: 15,
-        features: [
-          "Premium lens material",
-          "Anti-reflective coating",
-          "UV protection",
-          "Lightweight frame",
-          "Comfortable nose pads"
-        ]
-      };
+      // const productData = {
+      //   id: 1,
+      //   name: "Classic Aria",
+      //   category: "Vision Correction",
+      //   price: 1500,
+      //   originalPrice: 2000,
+      //   discount: 25,
+      //   description: "Elegant vision correction glasses designed for everyday comfort and style. Features premium materials and precision craftsmanship for optimal vision clarity. Perfect for both professional and casual settings.",
+      //   images: [
+      //     "img/products/vision/aria.jpg",
+      //     "img/products/vision/aria.jpg",
+      //     "img/products/vision/aria.jpg",
+      //     "img/products/vision/aria.jpg"
+      //   ],
+      //   stock: 15,
+      //   features: [
+      //     "Premium lens material",
+      //     "Anti-reflective coating",
+      //     "UV protection",
+      //     "Lightweight frame",
+      //     "Comfortable nose pads"
+      //   ]
+      // };
 
       // Update product information
       updateProductInfo(productData);
@@ -789,3 +680,7 @@ include 'misc/headernavfooter.php';
 
 </body>
 </html>
+
+<?php
+mysqli_close($conn);
+?>

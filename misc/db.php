@@ -3,13 +3,13 @@
     #Follow the format of the variables.
 
     #Paulo's SQL's Credentials
-    #$db_server = "localhost:3306";
-    #$db_user = "root";
-    #$db_pass = 'paulo';
-
-    $db_server = "localhost:3307";
+    $db_server = "localhost:3306";
     $db_user = "root";
-    $db_pass = "";
+    $db_pass = 'paulo';
+
+    #$db_server = "localhost:3307";
+    #$db_user = "root";
+    #$db_pass = "";
 
     #Keep this intact.
     $db_name = "shop";

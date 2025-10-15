@@ -2,6 +2,10 @@ $(function () {
   //Load the modal when login button is clicked
   $('#loginButton').on('click', function (e) {
     e.preventDefault();
+    
+    // Apply blur effect immediately when login button is clicked
+    $('body').addClass('modal-blur-active');
+    
     if (!$('#authModal').length) {
       $('body').append('<div id="modalContainer"></div>');
       $('#modalContainer').load('login-modal.php #authModal', function () {

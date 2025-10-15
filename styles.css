@@ -459,16 +459,16 @@ h6 {
 
 /* Modal backdrop blur effect */
 .modal-backdrop {
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Alternative: Custom backdrop for more control */
 .modal.show .modal-backdrop {
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 /* Enhanced blur effects for different scenarios */
@@ -479,8 +479,8 @@ h6 {
 }
 
 .modal.show .modal-backdrop {
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
 
 /* Glass morphism effect for the modal content */
@@ -505,16 +505,38 @@ h6 {
 
 /* Body blur effect when modal is active */
 body.modal-blur-active {
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Additional blur effects for different elements */
 body.modal-blur-active .navbar,
 body.modal-blur-active .container,
-body.modal-blur-active .card {
-  filter: blur(1px);
+body.modal-blur-active .card,
+body.modal-blur-active .row,
+body.modal-blur-active .col,
+body.modal-blur-active section,
+body.modal-blur-active header,
+body.modal-blur-active footer {
+  filter: blur(3px);
   transition: filter 0.3s ease;
+}
+
+/* More intense blur for main content areas */
+body.modal-blur-active main,
+body.modal-blur-active .hero,
+body.modal-blur-active .prescription-section,
+body.modal-blur-active .hstack,
+body.modal-blur-active .py-5 {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+}
+
+/* Ensure modal itself is not blurred */
+body.modal-blur-active .modal,
+body.modal-blur-active .modal-dialog,
+body.modal-blur-active .modal-content {
+  filter: none !important;
 }
 
 /* ===== Input with icon inside ===== */

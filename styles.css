@@ -450,18 +450,71 @@ h6 {
 #cart-page-items .list-group-item{ gap:12px }
 
 /* ===== AUTH MODAL STYLING ===== */
-.auth-modal {
-  border-radius: 15px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
-  background-color: #fff; 
-  border: 1px solid #000; 
-  color: #000; 
-}
 
 .modal-dialog-centered {
   display: flex;
   align-items: center;
   min-height: calc(100vh - 1rem);
+}
+
+/* Modal backdrop blur effect */
+.modal-backdrop {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Alternative: Custom backdrop for more control */
+.modal.show .modal-backdrop {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Enhanced blur effects for different scenarios */
+.modal.fade .modal-backdrop {
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+}
+
+.modal.show .modal-backdrop {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Glass morphism effect for the modal content */
+.auth-modal {
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+/* Dark theme blur effect (alternative) */
+.auth-modal.dark-theme {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Body blur effect when modal is active */
+body.modal-blur-active {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+/* Additional blur effects for different elements */
+body.modal-blur-active .navbar,
+body.modal-blur-active .container,
+body.modal-blur-active .card {
+  filter: blur(1px);
+  transition: filter 0.3s ease;
 }
 
 /* ===== Input with icon inside ===== */
@@ -471,14 +524,19 @@ h6 {
 
 .input-inner .form-control {
   padding-right: 2.5rem;
-  border: 1px solid #000;
-  background-color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #000;
+  border-radius: 8px;
 }
 
 .input-inner .form-control:focus {
-  border-color: #000;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  outline: none;
 }
 
 /* ===== Password Toggle Button ===== */

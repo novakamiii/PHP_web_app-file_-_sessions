@@ -15,6 +15,9 @@ $(function () {
   // Handle events AFTER the modal has been loaded dynamically
   $(document).on('shown.bs.modal', '#authModal', function () {
     console.log("Modal fully loaded");
+    
+    // Add enhanced blur effect to body when modal is open
+    $('body').addClass('modal-blur-active');
 
     // ============== Prevent invalid characters in email field ==============
     $(document).off('keypress', '#loginEmail, #signupEmail').on('keypress', '#loginEmail, #signupEmail', function (e) {
@@ -132,5 +135,10 @@ $(function () {
     $(document).off('input', '#contact').on('input', '#contact', function () {
       this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11);
     });
+  });
+
+  // Remove blur effect when modal is hidden
+  $(document).on('hidden.bs.modal', '#authModal', function () {
+    $('body').removeClass('modal-blur-active');
   });
 });

@@ -13,6 +13,7 @@ function navbarcall()
                 <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="products.php">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="search.php">Search</a></li>
                 <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="contact-us.php">Contact Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart</a></li>

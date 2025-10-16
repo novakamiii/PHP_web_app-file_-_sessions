@@ -1,5 +1,6 @@
 <?php
 include 'misc/headernavfooter.php';
+include 'misc/disp_products.php';
 ?>
 
 <!DOCTYPE html>
@@ -55,39 +56,15 @@ include 'misc/headernavfooter.php';
     <div class="container">
       <h2 class="feat text-center mb-4">Featured Products</h2>
       <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card h-50">
-            <img src="https://i.pinimg.com/1200x/66/70/d0/6670d0596683a34e8e3d44e98d54a7da.jpg" class="card-img-top" alt="Product 1">
-            <div class="card-body">
-              <h5 class="card-title">Nova</h5>
-              <p class="card-text">₱499.00</p>
-              <a href="#" class="btn btn-secondary w-100">Add to Cart</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card h-50">
-            <img src="https://i.pinimg.com/1200x/5b/00/95/5b0095e6ea5b0ccbc8e7b50b91c23db4.jpg" class="card-img-top" alt="Product 2">
-            <div class="card-body">
-              <h5 class="card-title">Celine</h5>
-              <p class="card-text">₱789.00</p>
-              <a href="#" class="btn btn-secondary w-100">Add to Cart</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card h-50">
-            <img src="https://i.pinimg.com/1200x/03/0e/82/030e82549f8d9695da4924009f80af77.jpg" class="card-img-top" alt="Product 3">
-            <div class="card-body">
-              <h5 class="card-title">Ferar</h5>
-              <p class="card-text">₱599.00</p>
-              <a href="#" class="btn btn-secondary w-100">Add to Cart</a>
-            </div>
-          </div>
-        </div>
+        <?php
+          displayFeaturedProducts();
+        ?>
+        
       </div>
     </div>
   </section>
+
+  <br>
 
   <!--CAROUSEL-->
   <h6>Our Collection</h6>

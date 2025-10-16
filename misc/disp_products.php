@@ -1,12 +1,12 @@
 <?php
 include 'db.php';
 
-//Display the Vision Correction Products
-function displayVisionCorrection()
+//Display all products by Category
+function displayProductsbyCateg($categ)
 {
     global $conn;
 
-    $query = "SELECT * FROM products WHERE category = 'vision'";
+    $query = "SELECT * FROM products WHERE category = '$categ'";
     $result = mysqli_query($conn, $query);
 
     echo "<script>console.log(\"Caregory: Vision Correction\");</script>";
@@ -17,7 +17,8 @@ function displayVisionCorrection()
         $id = $row['id'];
         $desc = $row['description'];
         $stock = $row['stock'];
-        $img = "img/products/vision/".$row['img'];
+        $categ = $row['category'];
+        $img = "img/products/$categ/".$row['img'];
 
         $html = <<<HTML
                     <div class="Vision-item">
@@ -34,104 +35,32 @@ function displayVisionCorrection()
     }
 }
 
-//Display the Protection Products
-function displayProtection()
+//Featured Product Page
+
+function displayFeaturedProducts()
 {
     global $conn;
-
-    $query = "SELECT * FROM products WHERE category = 'protection'";
+    $query = "SELECT * FROM products ORDER BY RAND() LIMIT 3";
     $result = mysqli_query($conn, $query);
 
-    echo "<script>console.log(\"Category: Protection \");</script>";
-
-    while ($row = mysqli_fetch_assoc($result)) {
+    while ($row = mysqli_fetch_assoc($result))
+    {
         $prod_name = $row['prod_name'];
         $price = $row['price'];
-        $id = $row['id'];
-        $desc = $row['description'];
         $stock = $row['stock'];
-        $img = "img/products/protection/".$row['img'];
+        $img = $row['img'];
 
         $html = <<<HTML
-                    <div class="protection-item">
-                        <img src="$img.jpg" class="protection-img" alt="$prod_name" style="width:200px;height:200px;">
-                        <p class="pro-tag">$prod_name<span style="margin-left: 50px;">₱$price</span></p> 
-                        <div class="text-center">
-                        <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-20 ">View</a>
-                        </div>
+                <div class="col-md-4">
+                    <div class="card h-50">
+                        <img src="https://i.pinimg.com/1200x/66/70/d0/6670d0596683a34e8e3d44e98d54a7da.jpg" class="card-img-top" alt="Product 1">
+                            <div class="card-body">
+                                <h5 class="card-title">$prod_name</h5>
+                                <p class="card-text">₱$price</p>
+                                <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-100">View</a>
+                            </div>
                     </div>
-                    <script>console.log("Displaying: $prod_name");</script>
-        HTML;
-
-        echo $html;
-    }
-}
-
-//Display the Sunglasses Products
-function displaySunglasses()
-{
-    global $conn;
-
-    $query = "SELECT * FROM products WHERE category = 'sunglasses'";
-    $result = mysqli_query($conn, $query);
-
-    echo "<script>console.log(\"Category: Sunglasses \");</script>";
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        $prod_name = $row['prod_name'];
-        $price = $row['price'];
-        $id = $row['id'];
-        $desc = $row['description'];
-        $stock = $row['stock'];
-        $img = "img/products/sunglasses/".$row['img'];
-
-        $html = <<<HTML
-                    <div class="sunglasses-item">
-                        <img src="$img.jpg" class="sunglasses-img" alt="$prod_name" style="width:200px;height:200px;">
-                        <p class="sun-tag">$prod_name<span style="margin-left: 50px;">₱$price</span></p> 
-                        <div class="text-center">
-                        <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-20 ">View</a>
-                        </div>
-                    </div>
-                    <script>console.log("Displaying: $prod_name");</script>
-        HTML;
-
-        echo $html;
-    }
-}
-
-//Display the Fashion Products
-function displayFashion()
-{
-    global $conn;
-
-    $query = "SELECT * FROM products WHERE category = 'fashion'";
-    $result = mysqli_query($conn, $query);
-
-    echo "<script>console.log(\"Category: Fashion\");</script>";
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        $prod_name = $row['prod_name'];
-        $price = number_format($row['price'], 2, '.', ','); // Format price for consistency
-        $id = $row['id'];
-        $desc = $row['description'];
-        $stock = $row['stock'];
-        $img = "img/products/fashion/" . $row['img'];
-
-        $html = <<<HTML
-                    <div class="Fashion-item">
-                        <img src="$img.jpg" class="Fashion-img" alt="$prod_name" style="width:200px;height:200px;">
-                        
-                        <div class="product-info-box">
-                            <p class="Fashion-tag product-name-text">$prod_name</p>
-                            <p class="Fashion-tag product-price-text">₱$price</p>
-                        </div>
-
-                        <div class="text-center">
-                        <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-20 ">View</a>
-                        </div>
-                    </div>
-                    <script>console.log("Displaying: $prod_name");</script>
+                </div>
         HTML;
 
         echo $html;

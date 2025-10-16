@@ -39,7 +39,7 @@ include 'misc/headernavfooter.php';
     <div class="container">
       <h2 class="category-title">Vision Correction</h2>
       <div class="scroll-container Vision">
-        <?php displayVisionCorrection(); ?>
+        <?php displayProductsbyCateg('vision'); ?>
       </div>
     </div>
   </section>
@@ -49,7 +49,7 @@ include 'misc/headernavfooter.php';
     <div class="container">
       <h2 class="category-title">Protection</h2>
       <div class="scroll-container protection">
-        <?php displayProtection(); ?>
+        <?php displayProductsbyCateg('protection'); ?>
       </div>
     </div>
   </section>
@@ -59,7 +59,7 @@ include 'misc/headernavfooter.php';
     <div class="container">
       <h2 class="category-title">Sunglasses</h2>
       <div class="scroll-container sunglasses">
-        <?php displaySunglasses(); ?>
+        <?php displayProductsbyCateg('sunglasses'); ?>
       </div>
     </div>
   </section>
@@ -69,7 +69,7 @@ include 'misc/headernavfooter.php';
     <div class="container">
       <h2 class="category-title">Fashion</h2>
       <div class="scroll-container Fashionbox">
-        <?php displayFashion(); ?>
+        <?php displayProductsbyCateg('fashion'); ?>
       </div>
     </div>
   </section>

@@ -104,9 +104,9 @@
                             <div class="quantity-selection mb-4">
                             <h5>Quantity</h5>
                             <div class="quantity-controls d-flex align-items-center">
-                                <button class="btn btn-outline-light" onclick="decreaseQuantity()">-</button>
+                                <button class="btn btn-outline-light" id="decreaseQty">-</button>
                                 <input type="number" class="form-control quantity-input mx-2" value="1" min="1" max="10" id="quantityInput">
-                                <button class="btn btn-outline-light" onclick="increaseQuantity()">+</button>
+                                <button class="btn btn-outline-light" id="increaseQty">+</button>
                             </div>
                             </div>
 
@@ -117,11 +117,19 @@
                             </span>
                             </div>
 
-                            <!-- Action Buttons -->
+                            <!-- Action Buttons
                             <div class="action-buttons">
                             <button class="btn btn-primary btn-lg me-3">
                                 <i class="fas fa-cart-plus me-2"></i>Add to Cart
-                            </button>
+                            </button> -->
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                            <a href="#" class="btn btn-primary btn-lg me-3" id="addToCartBtn"
+                                data-id="$pID">
+                                    <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </a>
+
         HTML;
 
         echo $html;

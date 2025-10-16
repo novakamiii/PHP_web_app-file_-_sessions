@@ -54,9 +54,9 @@ include 'misc/headernavfooter.php';
   </main>
 
   <!-- FOOTER -->
-  <footer class="mt-auto bg-black text-center py-2 text-secondary small">
-    © 2025 Weyewear | Designed for demo purposes
-  </footer>
+    <?php
+      footer();
+    ?>
 
   <!-- Custom font styles for about page -->
   <style>
@@ -88,59 +88,6 @@ include 'misc/headernavfooter.php';
       letter-spacing: 1px;
       text-transform: uppercase;
     }
-
-    /* Alternative font options - uncomment to use different fonts */
-    
-    /* Option 2: Modern Sans-serif fonts */
-    /*
-    .about-title {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-    .about-statement {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-weight: 400;
-    }
-    .info-list li {
-      font-family: 'Arial', sans-serif;
-      font-weight: 600;
-    }
-    */
-
-    /* Option 3: Elegant Serif fonts */
-    /*
-    .about-title {
-      font-family: 'Georgia', 'Times New Roman', serif;
-      font-weight: 400;
-      font-style: italic;
-    }
-    .about-statement {
-      font-family: 'Times New Roman', serif;
-      font-weight: 400;
-    }
-    .info-list li {
-      font-family: 'Georgia', serif;
-      font-weight: 500;
-    }
-    */
-
-    /* Option 4: Creative/Display fonts */
-    /*
-    .about-title {
-      font-family: 'Impact', 'Arial Black', sans-serif;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
-    .about-statement {
-      font-family: 'Trebuchet MS', sans-serif;
-      font-weight: 400;
-    }
-    .info-list li {
-      font-family: 'Verdana', sans-serif;
-      font-weight: 600;
-    }
-    */
   </style>
 </body>
 </html>

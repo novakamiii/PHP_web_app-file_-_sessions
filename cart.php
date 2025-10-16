@@ -23,22 +23,20 @@ include 'misc/cart_functions.php';
 	<main class="container py-4">
 		<h2>Your Cart</h2>
 		<div id="cart-page-items" class="list-group mb-3">
-			<?php showCartItems(); ?> <!-- ✅ items are now inside the container -->
+			<?php showCartItems(); ?>
 		</div>
 
-		<div class="d-flex justify-content-between align-items-center">
-			<div class="h4">Total: ₱<span id="cart-page-total">0.00</span></div>
-			<div>
-				<button id="cart-page-clear" class="btn btn-secondary">Clear Cart</button>
-				<button id="cart-page-checkout" class="btn btn-primary">Checkout</button>
-			</div>
-		</div>
+		<?php
+		if (getCartCount() != 0) {
+			cartUtils();
+		}
+		?>
 	</main>
 
 	<!-- FOOTER -->
-	<footer class="mt-auto bg-black text-center py-2 text-secondary small">
-		© 2025 Weyewear | Designed for demo purposes
-	</footer>
+		<?php
+		footer();
+		?>
 </body>
 
 </html>

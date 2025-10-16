@@ -55,25 +55,5 @@ $(document).ready(function () {
     $row.find('.item-total').text((unit * qty).toFixed(2));
     updateTotal();
   });
-
-  // remove item
-  $(document).on('click', '.remove', function (e) {
-    e.preventDefault();
-    $(this).closest('.list-group-item').remove();
-    // if no items left, show empty message
-    if ($('#cart-page-items .list-group-item').length === 0) {
-      $('#cart-page-items').html('<div class="alert alert-secondary">Your cart is empty.</div>');
-    }
-    updateTotal();
-  });
-
-  // clear cart (visual only)
-  $('#cart-page-clear').on('click', function (e) {
-    e.preventDefault();
-    $('#cart-page-items').html('<div class="alert alert-secondary">Your cart is empty.</div>');
-    $('#cart-page-total').text('0.00');
-  });
-
-  // initial total calc on load
   updateTotal();
 });

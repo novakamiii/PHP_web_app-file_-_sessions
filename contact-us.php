@@ -70,9 +70,10 @@ include 'misc/headernavfooter.php';
         </div>
     </section>
 
-    <footer class="mt-auto bg-black text-center py-2 text-secondary small">
-        © 2025 Weyewear | Designed for demo purposes
-    </footer>
+    <!-- FOOTER -->
+    <?php
+      footer();
+    ?>
 
     <script>
         $(document).ready(function () {

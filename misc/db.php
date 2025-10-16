@@ -3,13 +3,13 @@
     #Follow the format of the variables.
 
     #Paulo's SQL's Credentials
-    #$db_server = "localhost:3306";
-    #$db_user = "root";
-    #$db_pass = 'paulo';
-
-    $db_server = "localhost:3307";
+    $db_server = "localhost:3306";
     $db_user = "root";
-    $db_pass = "";
+    $db_pass = 'paulo';
+
+    #$db_server = "localhost:3307";
+    #$db_user = "root";
+    #$db_pass = "";
 
     #Keep this intact.
     $db_name = "shop";
@@ -19,9 +19,6 @@
 
     try {
         $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
-        echo "<script>console.log(\"Currently Connected! User: $db_user\");</script>";
     } catch (mysqli_sql_exception $e) {
         $e = addslashes(str_replace(array("\r", "\n"), ' ', $e->getMessage()));
-        echo "<script>alert(\"Database connection has failed! Reason: $e\");</script>";
     }
-?>

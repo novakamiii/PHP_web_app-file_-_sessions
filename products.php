@@ -89,10 +89,10 @@ include 'misc/headernavfooter.php';
   </section>
 
   <!-- FOOTER -->
-  <footer class="mt-auto bg-black text-center py-2 text-secondary small">
-    © 2025 WEyewear | Designed for demo purposes
-  </footer>
-
+    <?php
+      footer();
+    ?>
+    
   <!-- CART -->
   <script src="add-to-cart.js"></script>
 </body>

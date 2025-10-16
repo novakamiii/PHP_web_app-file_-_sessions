@@ -1,38 +1,63 @@
 $(function () {
-  //Load the modal when login button is clicked
+  // ======= OPEN LOGIN MODAL =======
   $('#loginButton').on('click', function (e) {
     e.preventDefault();
-    
-    // Apply blur effect immediately when login button is clicked
+    openAuthModal('login');
+  });
+
+  // ======= OPEN REGISTER MODAL =======
+  $('#registerButton').on('click', function (e) {
+    e.preventDefault();
+    openAuthModal('signup');
+  });
+
+  // ======= FUNCTION TO LOAD AND SHOW MODAL =======
+  function openAuthModal(mode) {
     $('body').addClass('modal-blur-active');
-    
+
     if (!$('#authModal').length) {
       $('body').append('<div id="modalContainer"></div>');
       $('#modalContainer').load('login-modal.php #authModal', function () {
         $('#authModal').modal('show');
+
+        // Switch to correct form after loading
+        if (mode === 'signup') {
+          $('#loginFormContainer').addClass('d-none');
+          $('#signupFormContainer').removeClass('d-none');
+          $('#modalTitle').text('Sign Up');
+        } else {
+          $('#signupFormContainer').addClass('d-none');
+          $('#loginFormContainer').removeClass('d-none');
+          $('#modalTitle').text('Login');
+        }
       });
     } else {
       $('#authModal').modal('show');
+      if (mode === 'signup') {
+        $('#loginFormContainer').addClass('d-none');
+        $('#signupFormContainer').removeClass('d-none');
+        $('#modalTitle').text('Sign Up');
+      } else {
+        $('#signupFormContainer').addClass('d-none');
+        $('#loginFormContainer').removeClass('d-none');
+        $('#modalTitle').text('Login');
+      }
     }
-  });
+  }
 
-  // Handle events AFTER the modal has been loaded dynamically
+  // ======= HANDLE MODAL EVENTS AFTER LOAD =======
   $(document).on('shown.bs.modal', '#authModal', function () {
     console.log("Modal fully loaded");
-    
-    // Add enhanced blur effect to body when modal is open
     $('body').addClass('modal-blur-active');
 
-    // ============== Prevent invalid characters in email field ==============
+    // ============== Prevent invalid characters in email ==============
     $(document).off('keypress', '#loginEmail, #signupEmail').on('keypress', '#loginEmail, #signupEmail', function (e) {
-      let regex = /^[a-zA-Z0-9_@.\-]+$/; // only allow alphanumeric, _, @, ., and -
+      let regex = /^[a-zA-Z0-9_@.\-]+$/;
       let char = String.fromCharCode(e.which);
-      if (!regex.test(char)) {
-        e.preventDefault();
-      }
+      if (!regex.test(char)) e.preventDefault();
     });
 
-    // ================= PASSWORD TOGGLE =================
+    // ============== PASSWORD TOGGLE ==============
     $(document).off('click', '.toggle-password').on('click', '.toggle-password', function () {
       const target = $($(this).data('target'));
       const type = target.attr('type') === 'password' ? 'text' : 'password';
@@ -40,7 +65,7 @@ $(function () {
       $(this).find('i').toggleClass('fa-eye fa-eye-slash');
     });
 
-    // ================= SWITCH BETWEEN LOGIN / SIGNUP =================
+    // ============== SWITCH BETWEEN LOGIN / SIGNUP ==============
     $(document).off('click', '#openSignup').on('click', '#openSignup', function (e) {
       e.preventDefault();
       $('#loginFormContainer').addClass('d-none');
@@ -55,7 +80,7 @@ $(function () {
       $('#modalTitle').text('Login');
     });
 
-    // ================= LOGIN VALIDATION =================
+    // ============== LOGIN VALIDATION ==============
     $(document).off('submit', '#loginForm').on('submit', '#loginForm', function (e) {
       e.preventDefault();
 
@@ -63,8 +88,7 @@ $(function () {
       let password = $('#loginPassword').val().trim();
       let valid = true;
 
-      $('#loginEmailError').text('');
-      $('#loginPasswordError').text('');
+      $('#loginEmailError, #loginPasswordError').text('');
 
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
         $('#loginEmailError').text('Please enter a valid email.');
@@ -82,13 +106,14 @@ $(function () {
       }
     });
 
-    // ================= SIGNUP VALIDATION =================
+    // ============== SIGNUP VALIDATION ==============
     $(document).off('submit', '#signupForm').on('submit', '#signupForm', function (e) {
       e.preventDefault();
 
       let valid = true;
       const nameRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
       const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
       const firstName = $('#firstName').val().trim();
       const lastName = $('#lastName').val().trim();
       const address = $('#address').val().trim();
@@ -130,18 +155,18 @@ $(function () {
 
       if (valid) {
         alert('Sign-up successful!');
-        $('#authModal').modal('hide')
+        $('#authModal').modal('hide');
         $('#signupForm')[0].reset();
       }
     });
 
-    // ================= CONTACT NUMBER VALIDATION =================
+    // ============== CONTACT VALIDATION ==============
     $(document).off('input', '#contact').on('input', '#contact', function () {
       this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11);
     });
   });
 
-  // Remove blur effect when modal is hidden
+  // ======= REMOVE BLUR ON CLOSE =======
   $(document).on('hidden.bs.modal', '#authModal', function () {
     $('body').removeClass('modal-blur-active');
   });

@@ -1,0 +1,43 @@
+/* Make body a flex container to push footer down */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* full viewport height */
+  margin: 0;
+}
+
+/* Main content takes all available space */
+main {
+  flex: 1 0 auto; /* grow and shrink as needed */
+  padding: 1rem 2rem;
+}
+
+/* Footer always sticks at bottom */
+footer {
+  flex-shrink: 0;
+  background-color: #000;
+  color: rgb(178, 174, 174);
+  text-align: center;
+  padding: 0.5rem 0;
+  font-size: small;
+}
+
+/* Optional: style cart items for clarity */
+#cart-page-items .list-group-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+}
+
+#cart-page-items .list-group-item img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+#cart-page-items .list-group-item .flex-fill {
+  margin-left: 12px;
+}

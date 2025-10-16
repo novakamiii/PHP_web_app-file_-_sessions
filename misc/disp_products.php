@@ -112,16 +112,21 @@ function displayFashion()
 
     while ($row = mysqli_fetch_assoc($result)) {
         $prod_name = $row['prod_name'];
-        $price = $row['price'];
+        $price = number_format($row['price'], 2, '.', ','); // Format price for consistency
         $id = $row['id'];
         $desc = $row['description'];
         $stock = $row['stock'];
-        $img = "img/products/fashion/".$row['img'];
+        $img = "img/products/fashion/" . $row['img'];
 
         $html = <<<HTML
                     <div class="Fashion-item">
                         <img src="$img.jpg" class="Fashion-img" alt="$prod_name" style="width:200px;height:200px;">
-                        <p class="Fashion-tag">$prod_name<span style="margin-left: 55px;">₱$price</span></p> 
+                        
+                        <div class="product-info-box">
+                            <p class="Fashion-tag product-name-text">$prod_name</p>
+                            <p class="Fashion-tag product-price-text">₱$price</p>
+                        </div>
+
                         <div class="text-center">
                         <a href="product-page.php?name=$prod_name" class="btn btn-secondary w-20 ">View</a>
                         </div>

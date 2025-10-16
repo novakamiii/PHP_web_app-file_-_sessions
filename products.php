@@ -10,79 +10,71 @@ include 'misc/headernavfooter.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WEyewear - Products</title>
   <link href="styles.css" rel="stylesheet">
+  <link href="product-style.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script> -->
   <script src="login-modal.js"></script>
 </head>
 
 <body>
 
   <!-- NAVBAR -->
-  <?php
-  navbarcall();
-  ?>
+  <?php navbarcall(); ?>
 
   <!-- HERO -->
-  <header class="product text-center text-white py-3 bg-dark" style="background:url('https://i.pinimg.com/1200x/cc/c8/d1/ccc8d1cbc54f9aeed28b3b44fa0f6599.jpg') center/cover no-repeat;">
+  <header class="product text-center text-white py-3 bg-dark"
+    style="background:url('https://i.pinimg.com/1200x/cc/c8/d1/ccc8d1cbc54f9aeed28b3b44fa0f6599.jpg') center/cover no-repeat;">
     <div class="container">
       <h1 class="productdisplay-10">WEyewear</h1>
       <p class="lead2">PRODUCTS</p>
     </div>
   </header>
-  <!--PRODUCTS-->
+
+  <!-- ===== PRODUCTS SECTION ===== -->
+
   <!-- VISION CORRECTION -->
-  <section class="vision correction py-5">
+  <section class="product-section py-5">
     <div class="container">
-      <h2 class="vis">Vision Correction</h2>
-      <div class="Vision">
-        <?php
-        displayVisionCorrection();
-        ?>
+      <h2 class="category-title">Vision Correction</h2>
+      <div class="scroll-container Vision">
+        <?php displayVisionCorrection(); ?>
       </div>
     </div>
   </section>
 
-  <!-- PROTECTIVE -->
-  <section class="Protect py-5">
+  <!-- PROTECTION -->
+  <section class="product-section py-5">
     <div class="container">
-      <h3 class="pro">Protection</h3>
-      <div class="protection">
-        <?php
-        displayProtection();
-        ?>
+      <h2 class="category-title">Protection</h2>
+      <div class="scroll-container protection">
+        <?php displayProtection(); ?>
       </div>
     </div>
   </section>
 
   <!-- SUNGLASSES -->
-  <section class="Sunglass py-5">
+  <section class="product-section py-5">
     <div class="container">
-      <h3 class="sun">Sunglasses</h3>
-      <div class="sunglasses">
-        <?php
-        displaySunglasses();
-        ?>
+      <h2 class="category-title">Sunglasses</h2>
+      <div class="scroll-container sunglasses">
+        <?php displaySunglasses(); ?>
       </div>
     </div>
   </section>
 
-  <!--FASHION-->
-  <section class="Fashion py-5">
+  <!-- FASHION -->
+  <section class="product-section py-5">
     <div class="container">
-      <h3 class="Fashion-title">Fashion</h3>
-      <div class="Fashionbox">
-        <?php
-        displayFashion();
-        ?>
+      <h2 class="category-title">Fashion</h2>
+      <div class="scroll-container Fashionbox">
+        <?php displayFashion(); ?>
       </div>
     </div>
   </section>
 
-
-  <!--ABOUT US -->
+  <!-- ABOUT US -->
   <section class="down py-3">
     <div class="container">
       <h4 class="text-justify mb-4">WEyewear</h4>
@@ -98,12 +90,10 @@ include 'misc/headernavfooter.php';
 
   <!-- FOOTER -->
   <footer class="mt-auto bg-black text-center py-2 text-secondary small">
-    © 2025 Weyewear | Designed for demo purposes
+    © 2025 WEyewear | Designed for demo purposes
   </footer>
 
-
-  <!-- CART PANEL -->
-  <!-- Cart UI moved to a dedicated page: cart.html -->
+  <!-- CART -->
   <script src="add-to-cart.js"></script>
 </body>
 

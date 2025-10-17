@@ -20,11 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         if ($row['email'] === $email) {
-            echo "<script>alert('Email already exists!'); window.history.back();</script>";
+            echo "Email already exists!";
             exit;
         }
         if ($row['contact'] === $contact) {
-            echo "<script>alert('Contact number already registered!'); window.history.back();</script>";
+            echo "Contact number already registered!";
             exit;
         }
     }
@@ -38,12 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     mysqli_stmt_bind_param($insertStmt, "sssss", $fullName, $email, $contact, $hashedPass, $address);
 
     if (mysqli_stmt_execute($insertStmt)) {
-        echo "<script>alert('Account created successfully!');</script>";
+        echo "Account created successfully!";
     } else {
-        echo "<script>alert('Error creating account. Please try again.'); window.history.back();</script>";
+        echo "Error creating account. Please try again.";
     }
+
 
     mysqli_stmt_close($insertStmt);
     mysqli_close($conn);
 }
-?>

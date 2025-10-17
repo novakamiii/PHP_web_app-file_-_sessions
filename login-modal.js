@@ -177,9 +177,35 @@ $(function () {
       }
 
       if (valid) {
-        // Everything OK — submit form normally
-        this.submit();
+        // AJAX signup
+        $.ajax({
+          url: 'misc/signup_function.php',
+          type: 'POST',
+          data: {
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
+            email: email,
+            number: contact,
+            password: password
+          },
+          success: function (response) {
+            let msg = $('<div>').html(response).text();
+            if (msg.includes('Account created successfully')) {
+              alert('Account created successfully!');
+              $('#authModal').modal('hide');
+              $('#signupForm')[0].reset();
+              location.reload(); // optional: reload page to reflect login state
+            } else {
+              alert(msg);
+            }
+          },
+          error: function () {
+            alert('An error occurred. Please try again.');
+          }
+        });
       }
+
     });
 
     // ============== LIVE EMAIL VALIDATION ==============

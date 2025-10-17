@@ -40,7 +40,7 @@ include 'misc/signup_function.php';
 
         <!-- ================= SIGN UP FORM ================= -->
         <div id="signupFormContainer" class="d-none">
-          <form id="signupForm" method="POST" action="misc/acccount_function.php" novalidate>
+          <form id="signupForm" method="POST" novalidate>
             <div class="row g-2">
               <div class="col-md-6">
                 <label class="form-label">First Name</label>

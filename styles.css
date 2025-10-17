@@ -457,38 +457,38 @@ h6 {
   min-height: calc(100vh - 1rem);
 }
 
-/* Modal backdrop blur effect - MAXIMUM INTENSITY */
+/* Modal backdrop blur effect - subtle, lighter background */
 .modal-backdrop {
-  backdrop-filter: blur(50px);
-  -webkit-backdrop-filter: blur(50px);
-  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Alternative: Custom backdrop for more control - MAXIMUM */
+/* Ensure consistent subtle blur when modal is shown */
 .modal.show .modal-backdrop {
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
-  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 /* Enhanced blur effects for different scenarios */
 .modal.fade .modal-backdrop {
   backdrop-filter: blur(0px);
   -webkit-backdrop-filter: blur(0px);
-  transition: backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+  transition: backdrop-filter 0.2s ease, -webkit-backdrop-filter 0.2s ease;
 }
 
 .modal.show .modal-backdrop {
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 
 /* Glass morphism effect for the modal content */
 .auth-modal {
   border-radius: 15px;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   color: #000;
@@ -503,11 +503,11 @@ h6 {
   color: #fff;
 }
 
-/* Body blur effect when modal is active - ULTRA HIGH INTENSITY */
+/* Body blur effect when modal is active - soft */
 body.modal-blur-active {
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
-  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-color: rgba(0, 0, 0, 0.10);
 }
 
 /* Additional blur effects for different elements - HIGH INTENSITY */
@@ -519,8 +519,8 @@ body.modal-blur-active .col,
 body.modal-blur-active section,
 body.modal-blur-active header,
 body.modal-blur-active footer {
-  filter: blur(15px);
-  transition: filter 0.3s ease;
+  filter: none;
+  transition: filter 0.2s ease;
 }
 
 /* More intense blur for main content areas - ULTRA HIGH */
@@ -529,8 +529,8 @@ body.modal-blur-active .hero,
 body.modal-blur-active .prescription-section,
 body.modal-blur-active .hstack,
 body.modal-blur-active .py-5 {
-  filter: blur(25px);
-  transition: filter 0.3s ease;
+  filter: none;
+  transition: filter 0.2s ease;
 }
 
 /* Ensure modal itself is not blurred */
@@ -548,18 +548,18 @@ body.modal-blur-active::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.15);
   z-index: 1040;
   pointer-events: none;
 }
 
 /* Ultra high blur for all images */
 body.modal-blur-active img {
-  filter: blur(20px);
-  transition: filter 0.3s ease;
+  filter: none;
+  transition: filter 0.2s ease;
 }
 
-/* Ultra high blur for text elements */
+/* Keep text readable; don't blur text elements */
 body.modal-blur-active p,
 body.modal-blur-active h1,
 body.modal-blur-active h2,
@@ -567,8 +567,8 @@ body.modal-blur-active h3,
 body.modal-blur-active h4,
 body.modal-blur-active h5,
 body.modal-blur-active h6 {
-  filter: blur(10px);
-  transition: filter 0.3s ease;
+  filter: none;
+  transition: filter 0.2s ease;
 }
 
 /* ===== Input with icon inside ===== */
@@ -580,8 +580,8 @@ body.modal-blur-active h6 {
   padding-right: 2.5rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
   background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   color: #000;
   border-radius: 8px;
 }

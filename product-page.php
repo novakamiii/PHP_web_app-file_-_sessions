@@ -267,76 +267,17 @@ include 'misc/product_page_handler.php';
     <div class="container">
       <h3 class="related-title mb-4">Related Products</h3>
       <div class="row">
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card related-product-card bg-dark border-light h-100">
-            <img src="img/products/vision/bonnie.jpg" class="card-img-top" alt="Related Product">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Modern Bonnie</h5>
-              <p class="card-text text-muted flex-grow-1">Contemporary style vision glasses</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="price">₱1,800</span>
-                <button class="btn btn-outline-light btn-sm">View</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card related-product-card bg-dark border-light h-100">
-            <img src="img/products/vision/clyde.jpg" class="card-img-top" alt="Related Product">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Classic Clyde</h5>
-              <p class="card-text text-muted flex-grow-1">Timeless design for everyday wear</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="price">₱1,600</span>
-                <button class="btn btn-outline-light btn-sm">View</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card related-product-card bg-dark border-light h-100">
-            <img src="img/products/vision/korange.jpg" class="card-img-top" alt="Related Product">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Vibrant Korange</h5>
-              <p class="card-text text-muted flex-grow-1">Bold and colorful frame design</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="price">₱1,900</span>
-                <button class="btn btn-outline-light btn-sm">View</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card related-product-card bg-dark border-light h-100">
-            <img src="img/products/vision/masahiro.jpg" class="card-img-top" alt="Related Product">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Elegant Masahiro</h5>
-              <p class="card-text text-muted flex-grow-1">Sophisticated Japanese-inspired design</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="price">₱2,200</span>
-                <button class="btn btn-outline-light btn-sm">View</button>
-              </div>
-            </div>
-          </div>
-        </div>
+          <?php
+            displayRelatedProducts();
+          ?>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="down py-3">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h4>WEyewear</h4>
-          <p class="text-muted">Elegance and protection for your eyes</p>
-        </div>
-        <div class="col-md-6 text-end">
-          <p class="text-muted">&copy; 2025 WEyewear. All rights reserved.</p>
-        </div>
-      </div>
-    </div>
-  </footer>
+   <?php
+      footer();
+    ?>
 
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

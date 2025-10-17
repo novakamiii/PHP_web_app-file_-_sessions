@@ -1,30 +1,30 @@
 <?php
-    include 'db.php';
+include 'db.php';
 
-    function prodDetails()
-    {
-        global $conn;
+function prodDetails()
+{
+    global $conn;
 
-        $prod_name = $_GET['name'];
+    $prod_name = $_GET['name'];
 
-        $query = "SELECT * FROM products WHERE prod_name = '" . mysqli_real_escape_string($conn, $prod_name) . "'";
-        $result = mysqli_query($conn, $query);
-        $product = mysqli_fetch_assoc($result);
+    $query = "SELECT * FROM products WHERE prod_name = '" . mysqli_real_escape_string($conn, $prod_name) . "'";
+    $result = mysqli_query($conn, $query);
+    $product = mysqli_fetch_assoc($result);
 
-        if (!$product) {
-            echo "<div class='alert alert-danger'>Product not found.</div>";
-            return;
-        }
+    if (!$product) {
+        echo "<div class='alert alert-danger'>Product not found.</div>";
+        return;
+    }
 
-        $pID = $product['id'];
-        $pName = $product['prod_name'];
-        $pPrice = $product['price'];
-        $pCategory = $product['category'];
-        $pStock = $product['stock'];
-        $pDesc = $product['description'];
-        $pImage = $product['img'];
+    $pID = $product['id'];
+    $pName = $product['prod_name'];
+    $pPrice = $product['price'];
+    $pCategory = $product['category'];
+    $pStock = $product['stock'];
+    $pDesc = $product['description'];
+    $pImage = $product['img'];
 
-        $html = <<<HTML
+    $html = <<<HTML
                 <div class="container">
                     <div class="row">
                         <!-- Product Images -->
@@ -132,6 +132,48 @@
 
         HTML;
 
+    echo $html;
+}
+
+//Display 4  Products that has relation to that product.
+function displayRelatedProducts()
+{
+    global $conn;
+
+    $urlPOST = $_GET['name'] ?? 'Aria';
+
+    $productCateg = "SELECT * FROM products WHERE prod_name = '$urlPOST'";
+    $productRes = mysqli_query($conn, $productCateg);
+    $productRow =  mysqli_fetch_assoc($productRes);
+    $productCategory = $productRow['category'];
+
+
+    $query = "SELECT * FROM products WHERE category = '$productCategory' ORDER BY RAND() LIMIT 4";
+    $result = mysqli_query($conn, $query);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $prod_name = $row['prod_name'];
+        $description = $row['description'];
+        $price = $row['price'];
+        $stock = $row['stock'];
+        $img = "img/products/$productCategory/".$row['img'];
+
+        $html = <<<HTML
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card related-product-card bg-dark border-light h-100">
+                    <img src="$img.jpg" class="card-img-top" alt="Related Product">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">$prod_name</h5>
+                        <p class="card-text text-muted flex-grow-1">$description</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                        <span class="price">₱$price</span>
+                        <a href="product-page.php?name=$prod_name" class="btn btn-outline-light btn-sm">View</a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+        HTML;
+
         echo $html;
     }
-?>
+}

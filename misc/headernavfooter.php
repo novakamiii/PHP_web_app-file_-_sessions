@@ -1,7 +1,29 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 
 function navbarcall()
 {
+    //Checks if user is logged in:
+    if (!isset($_SESSION['user_id']))
+    {
+        $logSignHTML = <<<HTML
+            <li><a class="dropdown-item" href="#" id="loginButton">Login</a></li>
+            <li><a class="dropdown-item" href="#" id="registerButton">Register</a></li>
+        HTML;
+    }
+    else
+    {
+        $name = $_SESSION['user_name'];
+        $logSignHTML = <<<HTML
+            <li><p class=" dropdown-item fw-bold">Hi, $name!</p></li>
+            <hr>
+            <li><a class="dropdown-item" href="#" id="logoutButton">Logout</a></li>
+        HTML;
+    }
+
     $html = <<<HTML
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
@@ -33,11 +55,10 @@ function navbarcall()
                         <!-- Account Dropdown -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user-circle"></i> Account
+                                <i class="fas fa-user-circle"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                                <li><a class="dropdown-item" href="#" id="loginButton">Login</a></li>
-                                <li><a class="dropdown-item" href="#" id="registerButton">Register</a></li>
+                                $logSignHTML
                             </ul>
                         </li>
                     </ul>
@@ -48,6 +69,7 @@ function navbarcall()
 
     echo $html;
 }
+
 
 function footer()
 {

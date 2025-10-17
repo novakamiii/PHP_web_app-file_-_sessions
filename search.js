@@ -10,6 +10,7 @@ $(document).ready(function () {
     const $listView = $('#listView');
     const $searchForm = $('#searchForm');
     const $searchInput = $('#searchInput');
+    const $resetButton = $('#resetSearch'); // ✅ add this
 
     let currentView = 'grid';
     let sampleProducts = [];
@@ -117,6 +118,15 @@ $(document).ready(function () {
     $searchForm.on('submit', function (e) {
         e.preventDefault();
         performSearch();
+    });
+
+    // ✅ Reset button
+    $resetButton.on('click', function () {
+        $searchInput.val('');
+        $categoryFilter.val('');
+        $priceFilter.val('');
+        $sortFilter.val('');
+        performSearch(); // fallback: shows all products
     });
 
     $categoryFilter.add($priceFilter).add($sortFilter).on('change', performSearch);

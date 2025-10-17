@@ -11,6 +11,16 @@ $(function () {
     openAuthModal('signup');
   });
 
+  // LOGOUT
+  $('#logoutButton').on('click', function(e) {
+    e.preventDefault();
+    $.post('misc/logout.php', function() {
+        alert('Logged out successfully!');
+        location.reload(); // reload page to reflect logged-out state
+    });
+});
+
+
   // ======= FUNCTION TO LOAD AND SHOW MODAL =======
   function openAuthModal(mode) {
     $('body').addClass('modal-blur-active');

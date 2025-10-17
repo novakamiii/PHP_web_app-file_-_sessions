@@ -1,5 +1,6 @@
 <?php
 include 'misc/headernavfooter.php';
+include 'misc/signup_function.php';
 ?>
 
 <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
@@ -17,7 +18,7 @@ include 'misc/headernavfooter.php';
             <div class="mb-3">
               <label for="loginEmail" class="form-label">Email</label>
               <div class="input-inner">
-                <input type="email" class="form-control styled-input" id="loginEmail">
+                <input type="email" name="email" class="form-control styled-input" id="loginEmail">
               </div>
               <div id="loginEmailError" class="error-msg"></div>
             </div>
@@ -25,7 +26,7 @@ include 'misc/headernavfooter.php';
             <div class="mb-3">
               <label for="loginPassword" class="form-label">Password</label>
               <div class="input-inner">
-                <input type="password" class="form-control styled-input" id="loginPassword">
+                <input type="password" name="password" class="form-control styled-input" id="loginPassword">
                 <button type="button" class="toggle-password" data-target="#loginPassword">
                   <i class="fa fa-eye"></i>
                 </button>
@@ -34,21 +35,17 @@ include 'misc/headernavfooter.php';
             </div>
 
             <button type="submit" class="btn modal-btn w-100">Login</button>
-
-            <div class="text-center mt-3">
-              <a href="#" id="openSignup" class="modal-link">No account yet? Sign up</a>
-            </div>
           </form>
         </div>
 
         <!-- ================= SIGN UP FORM ================= -->
         <div id="signupFormContainer" class="d-none">
-          <form id="signupForm" novalidate>
+          <form id="signupForm" method="POST" action="misc/acccount_function.php" novalidate>
             <div class="row g-2">
               <div class="col-md-6">
                 <label class="form-label">First Name</label>
                 <div class="input-inner">
-                  <input type="text" class="form-control styled-input" id="firstName" placeholder="First Name">
+                  <input type="text" class="form-control styled-input" name="firstName" id="firstName" placeholder="First Name">
                 </div>
                 <div id="firstNameError" class="error-msg"></div>
               </div>
@@ -56,7 +53,7 @@ include 'misc/headernavfooter.php';
               <div class="col-md-6">
                 <label class="form-label">Last Name</label>
                 <div class="input-inner">
-                  <input type="text" class="form-control styled-input" id="lastName" placeholder="Last Name">
+                  <input type="text" class="form-control styled-input" name="lastName" id="lastName" placeholder="Last Name">
                 </div>
                 <div id="lastNameError" class="error-msg"></div>
               </div>
@@ -65,7 +62,7 @@ include 'misc/headernavfooter.php';
             <div class="mb-3 mt-2">
               <label class="form-label">Address</label>
               <div class="input-inner">
-                <input type="text" class="form-control styled-input" id="address" placeholder="Address">
+                <input type="text" class="form-control styled-input" name="address" id="address" placeholder="Address">
               </div>
               <div id="addressError" class="error-msg"></div>
             </div>
@@ -73,7 +70,7 @@ include 'misc/headernavfooter.php';
             <div class="mb-3">
               <label class="form-label">Email</label>
               <div class="input-inner">
-                <input type="email" class="form-control styled-input" id="signupEmail" placeholder="Email">
+                <input type="email" class="form-control styled-input" name="email" id="signupEmail" placeholder="Email">
               </div>
               <div id="signupEmailError" class="error-msg"></div>
             </div>
@@ -81,7 +78,7 @@ include 'misc/headernavfooter.php';
             <div class="mb-3">
               <label class="form-label">Contact Number</label>
               <div class="input-inner">
-                <input type="text" class="form-control styled-input" id="contact" placeholder="09XXXXXXXXX" maxlength="11">
+                <input type="text" class="form-control styled-input" name="number" id="contact" placeholder="09XXXXXXXXX" maxlength="11">
               </div>
               <div id="contactError" class="error-msg"></div>
             </div>
@@ -89,7 +86,7 @@ include 'misc/headernavfooter.php';
             <div class="mb-3">
               <label class="form-label">Password</label>
               <div class="input-inner">
-                <input type="password" class="form-control styled-input" id="signupPassword" placeholder="Create password">
+                <input type="password" class="form-control styled-input" name="password" id="signupPassword" placeholder="Create password">
                 <button type="button" class="toggle-password" data-target="#signupPassword">
                   <i class="fa fa-eye"></i>
                 </button>

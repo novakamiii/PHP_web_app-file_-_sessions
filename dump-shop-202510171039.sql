@@ -31,7 +31,7 @@ CREATE TABLE `cart` (
   `frame_size` varchar(255) DEFAULT NULL,
   `dateadded` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -112,14 +112,15 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` text NOT NULL,
-  `address` text NOT NULL,
-  `reg_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `last_session` datetime NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `password` text DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `reg_date` datetime DEFAULT current_timestamp(),
+  `last_session` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,6 +130,8 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 set autocommit=0;
+INSERT INTO `users` VALUES
+(1,'Paulo Sevilla','pauloneil3334@gmail.com','09770939525','$2y$12$/jE8DikEVP7u3nODIm.5i.v/e5MY5rZLWhMyaRkg8WNGTyi.rVaE.','Poblacion 4','2025-10-17 10:23:45','2025-10-17 10:38:04');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -146,4 +149,4 @@ commit;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-10-16 23:02:11
+-- Dump completed on 2025-10-17 10:39:45

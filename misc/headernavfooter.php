@@ -13,6 +13,8 @@ function navbarcall()
             <li><a class="dropdown-item" href="#" id="loginButton">Login</a></li>
             <li><a class="dropdown-item" href="#" id="registerButton">Register</a></li>
         HTML;
+        $cartHTML = <<<HTML
+        HTML;
     }
     else
     {
@@ -21,6 +23,9 @@ function navbarcall()
             <li><p class=" dropdown-item fw-bold">Hi, $name!</p></li>
             <hr>
             <li><a class="dropdown-item" href="#" id="logoutButton">Logout</a></li>
+        HTML;
+        $cartHTML = <<<HTML
+            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart</a></li>
         HTML;
     }
 
@@ -50,7 +55,7 @@ function navbarcall()
                         <li class="nav-item"><a class="nav-link" href="products.php">Products</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact-us.php">Contact Us</a></li>
-                        <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart</a></li>
+                        $cartHTML
 
                         <!-- Account Dropdown -->
                         <li class="nav-item dropdown">

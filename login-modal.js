@@ -16,7 +16,7 @@ $(function () {
     e.preventDefault();
     $.post('misc/logout.php', function() {
         alert('Logged out successfully!');
-        location.reload(); // reload page to reflect logged-out state
+        window.location.href = "index.php"  // reload page to reflect logged-out state
     });
 });
 

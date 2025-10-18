@@ -35,6 +35,9 @@ include 'misc/signup_function.php';
             </div>
 
             <button type="submit" class="btn modal-btn w-100">Login</button>
+            <div class="text-center mt-3">
+              <a href="#" id="openSignup" class="modal-link">Don't have an Account? Sign up.</a>
+            </div>
           </form>
         </div>
 

@@ -1,6 +1,9 @@
 <?php
 include 'db.php';
 
+
+
+
 function prodDetails()
 {
     global $conn;
@@ -23,6 +26,24 @@ function prodDetails()
     $pStock = $product['stock'];
     $pDesc = $product['description'];
     $pImage = $product['img'];
+
+    if (isset($_SESSION['user_id'])) {
+        $addToCart = <<<HTML
+        <div class="action-buttons">
+            <a href="#" class="btn btn-primary btn-lg me-3" id="addToCartBtn"
+                data-id="$pID">
+                    <i class="fas fa-cart-plus me-2"></i>Add to Cart
+            </a>
+    HTML;
+    } else {
+        $addToCart = <<<HTML
+        <div class="action-buttons">
+            <a href="#" class="btn btn-primary btn-lg me-3" id="loginCartNotif"
+                data-id="$pID">
+                    <i class="fas fa-cart-plus me-2"></i>Add to Cart
+            </a>
+    HTML;
+    }
 
     $html = <<<HTML
                 <div class="container">
@@ -124,11 +145,7 @@ function prodDetails()
                             </button> -->
 
                             <!-- Action Buttons -->
-                            <div class="action-buttons">
-                            <a href="#" class="btn btn-primary btn-lg me-3" id="addToCartBtn"
-                                data-id="$pID">
-                                    <i class="fas fa-cart-plus me-2"></i>Add to Cart
-                            </a>
+                             $addToCart
 
         HTML;
 
@@ -156,7 +173,7 @@ function displayRelatedProducts()
         $description = $row['description'];
         $price = $row['price'];
         $stock = $row['stock'];
-        $img = "img/products/$productCategory/".$row['img'];
+        $img = "img/products/$productCategory/" . $row['img'];
 
         $html = <<<HTML
                 <div class="col-lg-3 col-md-6 mb-4">

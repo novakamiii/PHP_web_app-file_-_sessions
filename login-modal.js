@@ -12,13 +12,20 @@ $(function () {
   });
 
   // LOGOUT
-  $('#logoutButton').on('click', function(e) {
+  $('#logoutButton').on('click', function (e) {
     e.preventDefault();
-    $.post('misc/logout.php', function() {
-        alert('Logged out successfully!');
-        window.location.href = "index.php"  // reload page to reflect logged-out state
+    $.post('misc/logout.php', function () {
+      alert('Logged out successfully!');
+      window.location.href = "index.php"  // reload page to reflect logged-out state
     });
-});
+  });
+
+  $('#loginCartNotif').on('click', function (e) {
+
+    alert("Please Login to Continue!");
+    openAuthModal('login');
+
+  });
 
 
   // ======= FUNCTION TO LOAD AND SHOW MODAL =======

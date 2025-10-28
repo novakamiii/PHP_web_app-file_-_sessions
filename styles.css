@@ -1,5 +1,8 @@
 @import "node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import url('https://fonts.googleapis.com/css2?family=Corinthia&family=Montserrat:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap');
+@import "css/product-style.css";
+@import "css/cart-style.css";
+@import "css/search.css";
 
 *{
     box-sizing: border-box;
@@ -68,12 +71,23 @@ h1{
 }
     
 .card-title {
-    color: #ffffff;
+    color: #000000;
     font-size: 1.25rem;
     font-weight: 600;
     font-family: Cormorant Garamond, serif;  
 }
 .card-text {
+    color: #000000;
+    font-size: 0.9rem;
+    font-family: Cormorant Garamond, serif;
+}
+.rel-card-title {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-family: Cormorant Garamond, serif;  
+}
+.rel-card-text {
     color: #ffffff;
     font-size: 0.9rem;
     font-family: Cormorant Garamond, serif;

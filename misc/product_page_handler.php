@@ -180,8 +180,8 @@ function displayRelatedProducts()
                     <div class="card related-product-card bg-dark border-light h-100">
                     <img src="$img.jpg" class="card-img-top" alt="Related Product">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">$prod_name</h5>
-                        <p class="card-text flex-grow-1">$description</p>
+                        <h5 class="rel-card-title">$prod_name</h5>
+                        <p class="rel-card-text flex-grow-1">$description</p>
                         <div class="d-flex justify-content-between align-items-center">
                         <span class="price">₱$price</span>
                         <a href="product-page.php?name=$prod_name" class="btn btn-outline-light btn-sm">View</a>

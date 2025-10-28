@@ -14,7 +14,7 @@ include 'misc/disp_products.php';
   <link href="styles.css" rel="stylesheet">
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <!-- <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script> -->
-  <script src="login-modal.js"></script>
+  <script src="js/login-modal.js"></script>
 
 </head>
 
@@ -57,9 +57,9 @@ include 'misc/disp_products.php';
       <h2 class="feat text-center mb-4">Featured Products</h2>
       <div class="row g-4">
         <?php
-          displayFeaturedProducts();
+        displayFeaturedProducts();
         ?>
-        
+
       </div>
     </div>
   </section>
@@ -173,10 +173,10 @@ include 'misc/disp_products.php';
   </section>
 
 
- <!-- FOOTER -->
-    <?php
-      footer();
-    ?>
+  <!-- FOOTER -->
+  <?php
+  footer();
+  ?>
 
   <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

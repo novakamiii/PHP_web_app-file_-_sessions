@@ -13,8 +13,8 @@ include 'misc/product_page_handler.php';
   <link href="styles.css" rel="stylesheet">
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
-  <script src="login-modal.js"></script>
-  <script type="module" src="add-to-cart.js"></script>
+  <script src="js/login-modal.js"></script>
+  <script type="module" src="js/add-to-cart.js"></script>
 </head>
 
 <body class="bg-dark text-light">

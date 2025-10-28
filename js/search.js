@@ -99,8 +99,8 @@ $(document).ready(function () {
           <div class="card ${cardClass} bg-dark border-light h-100">
             <img src="${product.image}" class="card-img-top" alt="${product.name}" style="height:200px;object-fit:cover;">
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">${product.name}</h5>
-              <p class="card-text flex-grow-1">${product.description}</p>
+              <h5 class="rel-card-title">${product.name}</h5>
+              <p class="rel-card-text flex-grow-1">${product.description}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <span class="price">₱${parseFloat(product.price).toLocaleString()}.00</span>
                 <button class="btn btn-outline-light btn-sm" onclick="viewProduct('${product.name}')">

@@ -10,7 +10,6 @@ include 'misc/cart_functions.php';
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>WEyewear - Home</title>
 	<link href="styles.css" rel="stylesheet">
-	<link href="cart-style.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
@@ -44,9 +43,9 @@ include 'misc/cart_functions.php';
 
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="login-modal.js"></script>
-<script src="add-to-cart.js"></script>
-<script src="cart-page.js"></script>
+<script src="js/login-modal.js"></script>
+<script src="js/add-to-cart.js"></script>
+<script src="js/cart-page.js"></script>
 
 <?php
 mysqli_close($conn);

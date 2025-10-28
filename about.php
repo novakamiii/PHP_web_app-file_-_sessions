@@ -16,7 +16,7 @@ include 'misc/headernavfooter.php';
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="login-modal.js"></script>
+  <script src="js/login-modal.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100 bg-dark text-light">

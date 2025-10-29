@@ -11,7 +11,7 @@ Either MySQL Server and Workbench or XAMPP should do fine.
  ```
 CREATE DATABASE shop;
  ```
-<b> Import the database </b>
+<b> Import the database: </b>
  ```
 main-folder/
 ├── css/  
@@ -23,7 +23,7 @@ main-folder/
 ├── ...php 
 └── dump-shop-202510171618.sql <<< this one
  ```
-<b> Change your credentials </b>
+<b> Change your credentials: </b>
  ```
 main-folder/
 ├── css/  

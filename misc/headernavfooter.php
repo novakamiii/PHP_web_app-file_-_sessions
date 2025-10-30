@@ -7,6 +7,8 @@ if (session_status() === PHP_SESSION_NONE) {
 function navbarcall()
 {
     //Checks if user is logged in:
+
+    //Not logged in:
     if (!isset($_SESSION['user_id']))
     {
         $logSignHTML = <<<HTML
@@ -16,6 +18,7 @@ function navbarcall()
         $cartHTML = <<<HTML
         HTML;
     }
+    //Logged In:
     else
     {
         $name = $_SESSION['user_name'];
@@ -29,6 +32,7 @@ function navbarcall()
         HTML;
     }
 
+    //Navbar Format
     $html = <<<HTML
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">

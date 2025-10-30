@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $contact   = filter_input(INPUT_POST, "number", FILTER_SANITIZE_SPECIAL_CHARS);
     $password  = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
 
-    // ✅ Check for existing email/contact
+    //Check if the email already exist
     $checkQuery = "SELECT email, contact FROM users WHERE email = ? OR contact = ? LIMIT 1";
     $stmt = mysqli_prepare($conn, $checkQuery);
     mysqli_stmt_bind_param($stmt, "ss", $email, $contact);
@@ -29,10 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // ✅ Hash password
+    // Bcrypt Hash
     $hashedPass = password_hash($password, PASSWORD_BCRYPT);
 
-    // ✅ Use prepared statements for insertion
     $insertUser = "INSERT INTO users (name, email, contact, password, address) VALUES (?, ?, ?, ?, ?)";
     $insertStmt = mysqli_prepare($conn, $insertUser);
     mysqli_stmt_bind_param($insertStmt, "sssss", $fullName, $email, $contact, $hashedPass, $address);

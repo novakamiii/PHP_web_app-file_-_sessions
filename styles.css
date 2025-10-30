@@ -3,6 +3,7 @@
 @import "css/product-style.css";
 @import "css/cart-style.css";
 @import "css/search.css";
+@import "css/product-page.css";
 
 *{
     box-sizing: border-box;

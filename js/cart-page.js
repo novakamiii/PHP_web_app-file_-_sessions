@@ -1,5 +1,5 @@
 // cart-page.js (robust jQuery version)
-$(document).ready(function () {
+$(function () {
   // helper: parse money-like strings into a float (strips currency symbols, commas, spaces)
   function parseMoney(text) {
     if (!text && text !== 0) return 0;

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     const $searchResults = $('#searchResults');
     const $resultsCount = $('#resultsCount');
     const $loadingSpinner = $('#loadingSpinner');
@@ -155,7 +155,7 @@ function viewProduct(productName) {
     window.location.href = redirectUrl;
 }
 
-$(document).ready(function () {
+$(function () {
     // Auto-search if coming from navbar
     const urlParams = new URLSearchParams(window.location.search);
     const initialSearch = urlParams.get('search_query');
@@ -167,7 +167,7 @@ $(document).ready(function () {
     }
 });
 
-$(document).ready(function () {
+$(function () {
     if (window.location.pathname.includes('search.php')) {
         $(".search-nav").hide(); // or $(".search-nav").hide()
     }

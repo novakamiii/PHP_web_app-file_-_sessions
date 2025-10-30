@@ -1,9 +1,7 @@
 <?php
 include 'db.php';
 
-
-
-
+//Product Page
 function prodDetails()
 {
     global $conn;

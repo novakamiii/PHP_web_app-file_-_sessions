@@ -3,7 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
+/**
+ * For showing the navigation bar.
+ */
 function navbarcall()
 {
     //Checks if user is logged in:
@@ -79,7 +81,9 @@ function navbarcall()
     echo $html;
 }
 
-
+/**
+ * For showing the footer
+ */
 function footer()
 {
     $html = <<<HTML

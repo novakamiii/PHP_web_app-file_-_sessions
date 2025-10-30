@@ -50,6 +50,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'add' && isset($_GET['id'])) {
     }
 }
 
+/**
+ * Counts all the cart items in the User's account
+ */
 function getCartCount()
 {
     global $conn;
@@ -60,6 +63,9 @@ function getCartCount()
     return (int)$row['counted'];
 }
 
+/**
+ * Shows all the cart's content associated from the User.
+ */
 function showCartItems()
 {
     $usr_id = $_SESSION['user_id'] ?? 0;
@@ -119,7 +125,9 @@ function showCartItems()
         }
     }
 }
-
+/**
+ * Cart buttons for clearing the cart and checkout.
+ */
 function cartUtils()
 {
     $html = <<<HTML

@@ -1,7 +1,9 @@
 <?php
 include 'db.php';
 
-//Product Page
+/**
+ * Shows the product details of the respective product.
+ */
 function prodDetails()
 {
     global $conn;
@@ -150,7 +152,9 @@ function prodDetails()
     echo $html;
 }
 
-//Display 4  Products that has relation to that product.
+/**
+ * Displays the products related to the same category of an current product. Limits by 4.
+ */
 function displayRelatedProducts()
 {
     global $conn;

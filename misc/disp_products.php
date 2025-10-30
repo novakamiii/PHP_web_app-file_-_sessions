@@ -1,7 +1,12 @@
 <?php
 include 'db.php';
 
-//Display all products by Category
+/**
+ * Displays the products by category
+ * 
+ * @param string $categ
+ * @throws Exception
+ */
 function displayProductsbyCateg($categ)
 {
     global $conn;
@@ -18,7 +23,7 @@ function displayProductsbyCateg($categ)
         $desc = $row['description'];
         $stock = $row['stock'];
         $categ = $row['category'];
-        $img = "img/products/$categ/".$row['img'];
+        $img = "img/products/$categ/" . $row['img'];
 
         $html = <<<HTML
                     <div class="Vision-item">
@@ -35,16 +40,16 @@ function displayProductsbyCateg($categ)
     }
 }
 
-//Featured Product Page
-
+/**
+ * Randomly chooses 3 products from the database.
+ */
 function displayFeaturedProducts()
 {
     global $conn;
     $query = "SELECT * FROM products ORDER BY RAND() LIMIT 3";
     $result = mysqli_query($conn, $query);
 
-    while ($row = mysqli_fetch_assoc($result))
-    {
+    while ($row = mysqli_fetch_assoc($result)) {
         $prod_name = $row['prod_name'];
         $price = $row['price'];
         $stock = $row['stock'];

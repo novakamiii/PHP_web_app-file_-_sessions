@@ -1,16 +1,13 @@
 <?php
 include 'misc/headernavfooter.php';
 include 'misc/cart_functions.php';
+$site = 'Cart';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>WEyewear - Home</title>
-	<link href="styles.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+	<?php require_once 'template/head.php' ?>
 </head>
 
 <body>
@@ -33,20 +30,20 @@ include 'misc/cart_functions.php';
 	</main>
 
 	<!-- FOOTER -->
-		<?php
-		footer();
-		?>
+	<?php
+	footer();
+	?>
 </body>
 
 </html>
 
-
-<script src="node_modules/jquery/dist/jquery.min.js"></script>
-<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/login-modal.js"></script>
-<script src="js/add-to-cart.js"></script>
-<script src="js/cart-page.js"></script>
-
 <?php
 mysqli_close($conn);
 ?>
+
+<?php include 'template/login-modal.php'; ?>
+<?php require_once 'template/scripts.php'; ?>
+
+<!-- Page-specific scripts -->
+<script src="js/cart-page.js"></script>
+<script src="js/add-to-cart.js"></script>

@@ -1,21 +1,15 @@
 <?php
 include 'misc/headernavfooter.php';
 include 'misc/product_page_handler.php';
+$site = $_GET['name'];
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WEyewear - Product Details</title>
-  <link href="styles.css" rel="stylesheet">
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
-  <script src="js/login-modal.js"></script>
-  <script src="js/legacy-prod-page.js"></script>
-  <script type="module" src="js/add-to-cart.js"></script>
+  <?php require_once 'template/head.php'?>
+  
 </head>
 
 <body class="bg-dark text-light">
@@ -281,13 +275,12 @@ include 'misc/product_page_handler.php';
       footer();
     ?>
 
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <!-- Bootstrap JS -->
-  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
 <?php
 mysqli_close($conn);
 ?>
+<?php require_once 'template/scripts.php'?>
+<script src="js/legacy-prod-page.js"></script>  
+<script type="module" src="js/add-to-cart.js"></script>

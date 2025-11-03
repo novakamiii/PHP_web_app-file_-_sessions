@@ -1,20 +1,13 @@
 <?php
 include 'misc/disp_products.php';
 include 'misc/headernavfooter.php';
+$site = 'Products';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WEyewear - Products</title>
-  <link href="styles.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/login-modal.js"></script>
+  <?php require_once 'template/head.php'?>
 </head>
 
 <body>
@@ -26,7 +19,7 @@ include 'misc/headernavfooter.php';
   <header class="product text-center text-white py-3 bg-dark"
     style="background:url('https://i.pinimg.com/1200x/cc/c8/d1/ccc8d1cbc54f9aeed28b3b44fa0f6599.jpg') center/cover no-repeat;">
     <div class="container">
-      <h1 class="productdisplay-10">WEyewear</h1>
+      <h1 class="productdisplay-10">Silicon Optics</h1>
       <p class="lead2">PRODUCTS</p>
     </div>
   </header>
@@ -93,10 +86,13 @@ include 'misc/headernavfooter.php';
     ?>
     
   <!-- CART -->
-  <script src="js/add-to-cart.js"></script>
+  
 </body>
 
 </html>
+<script src="js/add-to-cart.js"></script>
+<?php require_once 'template/scripts.php'?>
+
 
 <?php
 mysqli_close($conn);

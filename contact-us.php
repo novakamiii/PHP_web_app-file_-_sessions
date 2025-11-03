@@ -1,34 +1,28 @@
 <?php
 include 'misc/headernavfooter.php';
+$site = 'Contact';
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEyewear - Contact</title>
-    <link href="styles.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/login-modal.js"></script>
-    <script src="js/contact-us.js"></script>
-    
+    <?php require_once 'template/head.php' ?>
+
     <style>
         html {
             /* Ensures HTML takes up the full height */
             height: 100%;
         }
-        
+
         body {
             /* Use flexbox and column direction for layout */
             display: flex;
             flex-direction: column;
             /* Ensures the body also takes up full height of the viewport */
-            min-height: 100vh; 
-            margin: 0; /* Ensures no default body margin interferes */
+            min-height: 100vh;
+            margin: 0;
+            /* Ensures no default body margin interferes */
         }
     </style>
 </head>
@@ -42,7 +36,7 @@ include 'misc/headernavfooter.php';
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <form id="contact-form" class="p-4 border rounded shadow-sm">
-                        
+
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="name">
@@ -72,13 +66,16 @@ include 'misc/headernavfooter.php';
 
     <!-- FOOTER -->
     <?php
-      footer();
+    footer();
     ?>
+    <?php include 'template/login-modal.php'; ?>
+    <?php require_once 'template/scripts.php'; ?>
 
-    <script>
-        
-    </script>
+    <!-- Page-specific scripts -->
+    <script src="js/cart-page.js"></script>
+    <script src="js/add-to-cart.js"></script>
+    <script src="js/contact-us.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

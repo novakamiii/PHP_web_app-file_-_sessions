@@ -1,8 +1,3 @@
-<?php
-include 'misc/headernavfooter.php';
-include 'misc/signup_function.php';
-?>
-
 <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content auth-modal">

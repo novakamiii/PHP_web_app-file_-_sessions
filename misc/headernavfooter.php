@@ -38,7 +38,7 @@ function navbarcall()
     $html = <<<HTML
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="index.php">WEyewear</a>
+                <a class="navbar-brand" href="index.php">Silicon</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -88,7 +88,7 @@ function footer()
 {
     $html = <<<HTML
             <footer class="mt-auto bg-black text-center py-2 text-secondary small">
-                © 2025 Weyewear | Designed for demo purposes
+                © 2025 Silicon Optics | Designed for demo purposes
             </footer>
     HTML;
 

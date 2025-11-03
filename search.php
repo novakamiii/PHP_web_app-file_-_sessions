@@ -8,13 +8,8 @@ $searchQuery = isset($_GET['search_query']) ? htmlspecialchars($_GET['search_que
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WEyewear - Search</title>
-  <link href="styles.css" rel="stylesheet">
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
-  <script src="js/search.js"></script>
+  <?php require_once 'template/head.php' ?>
+  
 </head>
 
 <body class="bg-dark text-light">
@@ -162,13 +157,8 @@ $searchQuery = isset($_GET['search_query']) ? htmlspecialchars($_GET['search_que
     <?php
       footer();
     ?>
-
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-  <script>
-   
-  </script>
 </body>
 
 </html>
+<?php require_once 'template/scripts.php'?>
+<script src="js/search.js"></script>

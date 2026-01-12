@@ -139,10 +139,7 @@ function cartUtils()
                             <button type="submit" class="btn btn-secondary">Clear Cart</button>
                         </form>
 
-                        <form action="cart.php" method="post" class="d-inline">
-                            <input type="hidden" name="check-out" value="1">
-                            <button type="submit" class="btn btn-primary">Checkout</button>
-                        </form>
+                        <a href="checkout.php" class="btn btn-primary">Checkout</a>
                     </div>
             </div>
     HTML;

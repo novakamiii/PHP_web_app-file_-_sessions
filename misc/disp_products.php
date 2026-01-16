@@ -11,8 +11,20 @@ function displayProductsbyCateg($categ)
 {
     global $conn;
 
+    // Check if connection is valid
+    if (!$conn || !($conn instanceof mysqli)) {
+        echo "<p class='text-danger'>Database connection error. Please try again later.</p>";
+        return;
+    }
+
     $query = "SELECT * FROM products WHERE category = '$categ'";
     $result = mysqli_query($conn, $query);
+    
+    // Check if query was successful
+    if (!$result) {
+        echo "<p class='text-danger'>Error loading products: " . mysqli_error($conn) . "</p>";
+        return;
+    }
 
     echo "<script>console.log(\"Caregory: Vision Correction\");</script>";
 
@@ -46,8 +58,21 @@ function displayProductsbyCateg($categ)
 function displayFeaturedProducts()
 {
     global $conn;
+    
+    // Check if connection is valid
+    if (!$conn || !($conn instanceof mysqli)) {
+        echo "<p class='text-danger'>Database connection error. Please try again later.</p>";
+        return;
+    }
+    
     $query = "SELECT * FROM products ORDER BY RAND() LIMIT 3";
     $result = mysqli_query($conn, $query);
+    
+    // Check if query was successful
+    if (!$result) {
+        echo "<p class='text-danger'>Error loading products: " . mysqli_error($conn) . "</p>";
+        return;
+    }
 
     while ($row = mysqli_fetch_assoc($result)) {
         $prod_name = $row['prod_name'];

@@ -27,6 +27,7 @@ function navbarcall()
         $logSignHTML = <<<HTML
             <li><p class=" dropdown-item fw-bold">Hi, $name!</p></li>
             <hr>
+            <li><a class="dropdown-item" href="profile/user-information.php"><i class="fas fa-user me-2"></i>User Information</a></li>
             <li><a class="dropdown-item" href="profile/orders-list.php"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
             <li><a class="dropdown-item" href="#" id="logoutButton">Logout</a></li>
         HTML;

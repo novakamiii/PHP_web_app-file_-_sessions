@@ -11,6 +11,11 @@ if (!isset($_SESSION['order_refunds'])) {
     $_SESSION['order_refunds'] = [];
 }
 
+// Initialize shipping information in session if not exists
+if (!isset($_SESSION['order_shipping'])) {
+    $_SESSION['order_shipping'] = [];
+}
+
 // Handle refund processing
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_refund'])) {
     $order_id = $_POST['order_id'];
@@ -37,12 +42,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $order_id = $_POST['order_id'];
     $new_status = $_POST['status'];
     
+    // Ensure order_id is string for consistent session key matching
+    $order_id = (string)$order_id;
+    
     // Don't allow status update if order is refunded
     if (!isset($_SESSION['order_refunds'][$order_id]) || $_SESSION['order_refunds'][$order_id]['status'] !== 'refunded') {
         $_SESSION['order_statuses'][$order_id] = $new_status;
         header('Location: order-details.php?id=' . $order_id . '&updated=1');
         exit;
     }
+}
+
+// Handle shipping information update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_shipping'])) {
+    $order_id = $_POST['order_id'];
+    $tracking = isset($_POST['tracking']) ? trim($_POST['tracking']) : '';
+    $shipping_date = isset($_POST['shipping_date']) ? trim($_POST['shipping_date']) : '';
+    $delivery_date = isset($_POST['delivery_date']) ? trim($_POST['delivery_date']) : '';
+    
+    // Store shipping information in session
+    $_SESSION['order_shipping'][$order_id] = [
+        'tracking' => $tracking,
+        'shipping_date' => $shipping_date,
+        'delivery_date' => $delivery_date
+    ];
+    
+    header('Location: order-details.php?id=' . $order_id . '&shipping_updated=1');
+    exit;
 }
 
 // Sample order data - in real app, this would come from database
@@ -190,11 +216,57 @@ $orders = [
     ]
 ];
 
+// Get orders from session (newly placed orders)
+if (isset($_SESSION['user_orders'])) {
+    foreach ($_SESSION['user_orders'] as $session_order_id => $session_order) {
+        // Convert session order format to match orders array format
+        $orders[$session_order_id] = [
+            'id' => $session_order_id,
+            'customer' => $session_order['customer_name'],
+            'email' => $session_order['customer_email'],
+            'contact' => $session_order['customer_contact'],
+            'address' => $session_order['customer_address'],
+            'total' => str_replace(',', '', $session_order['total']),
+            'status' => isset($_SESSION['order_statuses'][$session_order_id]) ? $_SESSION['order_statuses'][$session_order_id] : 'pending',
+            'date' => $session_order['date'],
+            'items' => $session_order['items'],
+            'shipping_method' => 'Standard Shipping',
+            'tracking' => '',
+            'shipping_date' => '',
+            'delivery_date' => 'TBD'
+        ];
+    }
+}
+
 // Get order ID from URL parameter
 $order_id = isset($_GET['id']) ? $_GET['id'] : '1001';
 
 // Get order data or default to first order
-$order = isset($orders[$order_id]) ? $orders[$order_id] : $orders['1001'];
+if (isset($orders[$order_id])) {
+    $order = $orders[$order_id];
+} else {
+    // If order not found, try to get from session
+    if (isset($_SESSION['user_orders'][$order_id])) {
+        $session_order = $_SESSION['user_orders'][$order_id];
+        $order = [
+            'id' => $order_id,
+            'customer' => $session_order['customer_name'],
+            'email' => $session_order['customer_email'],
+            'contact' => $session_order['customer_contact'],
+            'address' => $session_order['customer_address'],
+            'total' => str_replace(',', '', $session_order['total']),
+            'status' => isset($_SESSION['order_statuses'][$order_id]) ? $_SESSION['order_statuses'][$order_id] : 'pending',
+            'date' => $session_order['date'],
+            'items' => $session_order['items'],
+            'shipping_method' => 'Standard Shipping',
+            'tracking' => '',
+            'shipping_date' => '',
+            'delivery_date' => 'TBD'
+        ];
+    } else {
+        $order = isset($orders['1001']) ? $orders['1001'] : null;
+    }
+}
 
 // Check if order is refunded
 $is_refunded = isset($_SESSION['order_refunds'][$order_id]) && $_SESSION['order_refunds'][$order_id]['status'] === 'refunded';
@@ -208,6 +280,20 @@ if (isset($_SESSION['order_statuses'][$order_id])) {
 // If refunded, set status to refunded
 if ($is_refunded) {
     $order['status'] = 'refunded';
+}
+
+// Override shipping information from session if exists
+if (isset($_SESSION['order_shipping'][$order_id])) {
+    $shipping_info = $_SESSION['order_shipping'][$order_id];
+    if (isset($shipping_info['tracking'])) {
+        $order['tracking'] = $shipping_info['tracking'];
+    }
+    if (isset($shipping_info['shipping_date']) && !empty($shipping_info['shipping_date'])) {
+        $order['shipping_date'] = $shipping_info['shipping_date'];
+    }
+    if (isset($shipping_info['delivery_date']) && !empty($shipping_info['delivery_date'])) {
+        $order['delivery_date'] = $shipping_info['delivery_date'];
+    }
 }
 
 // Status class mapping
@@ -499,6 +585,12 @@ $status_classes['refunded'] = 'pending'; // Use pending style for refunded
         </div>
       <?php endif; ?>
 
+      <?php if (isset($_GET['shipping_updated']) && $_GET['shipping_updated'] == '1'): ?>
+        <div class="alert" style="background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;">
+          Shipping information updated successfully!
+        </div>
+      <?php endif; ?>
+
       <?php if ($is_refunded && $refund_info): ?>
         <div class="alert" style="background: #fff3cd; color: #856404; border: 1px solid #ffc107;">
           <strong>Refunded:</strong> This order was refunded on <?php echo date('F j, Y g:i A', strtotime($refund_info['refunded_at'])); ?>
@@ -604,24 +696,46 @@ $status_classes['refunded'] = 'pending'; // Use pending style for refunded
       <!-- Shipping Information -->
       <div class="detail-section">
         <h3>Shipping Information</h3>
-        <div class="detail-row">
-          <span class="detail-label">Shipping Method:</span>
-          <span class="detail-value"><?php echo htmlspecialchars($order['shipping_method']); ?></span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Tracking Number:</span>
-          <span class="detail-value">
-            <input type="text" value="<?php echo htmlspecialchars($order['tracking']); ?>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; width: 200px;" placeholder="Enter tracking number">
-          </span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Shipping Date:</span>
-          <span class="detail-value"><?php echo $order['shipping_date'] ?: 'Not yet shipped'; ?></span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Estimated Delivery:</span>
-          <span class="detail-value"><?php echo htmlspecialchars($order['delivery_date']); ?></span>
-        </div>
+        <form method="POST" id="shipping-form">
+          <input type="hidden" name="update_shipping" value="1">
+          <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+          <div class="detail-row">
+            <span class="detail-label">Shipping Method:</span>
+            <span class="detail-value"><?php echo htmlspecialchars($order['shipping_method']); ?></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Tracking Number:</span>
+            <span class="detail-value">
+              <input type="text" name="tracking" value="<?php echo htmlspecialchars($order['tracking']); ?>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; width: 200px;" placeholder="Enter tracking number">
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Shipping Date:</span>
+            <span class="detail-value">
+              <input type="date" name="shipping_date" value="<?php echo $order['shipping_date'] ? date('Y-m-d', strtotime($order['shipping_date'])) : ''; ?>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+              <?php if (empty($order['shipping_date'])): ?>
+                <span style="color: #666; margin-left: 10px; font-size: 13px;">Not yet shipped</span>
+              <?php endif; ?>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Estimated Delivery:</span>
+            <span class="detail-value">
+              <input type="date" name="delivery_date" value="<?php echo (!empty($order['delivery_date']) && $order['delivery_date'] !== 'TBD') ? (is_numeric(strtotime($order['delivery_date'])) ? date('Y-m-d', strtotime($order['delivery_date'])) : '') : ''; ?>" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+              <?php if (empty($order['delivery_date']) || $order['delivery_date'] === 'TBD'): ?>
+                <span style="color: #666; margin-left: 10px; font-size: 13px;">TBD</span>
+              <?php endif; ?>
+            </span>
+          </div>
+          <div class="detail-row" style="padding-top: 15px; border-top: 2px solid #eee; margin-top: 10px;">
+            <span class="detail-label"></span>
+            <span class="detail-value">
+              <button type="submit" class="btn btn-success" style="margin: 0;">
+                <i class="fas fa-save"></i> Save Shipping Information
+              </button>
+            </span>
+          </div>
+        </form>
       </div>
 
       <!-- Actions -->

@@ -61,39 +61,55 @@ $(function () {
         buttonText.textContent = 'Processing...';
         spinner.classList.remove('d-none');
         
-        // Simulate payment processing (1.5 seconds delay)
-        setTimeout(function() {
-            
-            // Redirect to success page
-            window.location.href = 'success.php';
-            
-            // Backend: Replace the above setTimeout and alert with your actual AJAX call:
-            // 
-            // $.ajax({
-            //     url: 'your-payment-endpoint.php',
-            //     method: 'POST',
-            //     data: {
-            //         card_number: cardNumber,
-            //         card_expiry: cardExpiry,
-            //         card_cvc: cardCvc,
-            //         customer_name: $('#customer-name').val(),
-            //         customer_email: $('#customer-email').val(),
-            //         customer_contact: $('#customer-contact').val(),
-            //         customer_address: $('#customer-address').val(),
-            //         total: $('#payment-total').text()
-            //     },
-            //     success: function(response) {
-            //         // Handle success response
-            //         window.location.href = 'success.html';
-            //     },
-            //     error: function(xhr) {
-            //         // Handle error
-            //         cardErrors.textContent = 'Payment failed. Please try again.';
-            //         submitButton.disabled = false;
-            //         buttonText.textContent = 'Pay ₱' + $('#payment-total').text();
-            //         spinner.classList.add('d-none');
-            //     }
-            // });
-        }, 1500);
+        // Process checkout via AJAX
+        $.ajax({
+            url: 'misc/process_checkout.php',
+            method: 'POST',
+            data: {
+                customer_name: $('#customer-name').val(),
+                customer_email: $('#customer-email').val(),
+                customer_contact: $('#customer-contact').val(),
+                customer_address: $('#customer-address').val()
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log('Checkout response:', response); // Debug log
+                if (response && response.success) {
+                    // Redirect to success page with order ID
+                    window.location.href = 'checkout-success.php?order_id=' + response.order_id;
+                } else {
+                    // Handle error
+                    cardErrors.textContent = (response && response.message) ? response.message : 'Payment failed. Please try again.';
+                    submitButton.disabled = false;
+                    buttonText.textContent = 'Pay ₱' + $('#payment-total').text();
+                    spinner.classList.add('d-none');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Checkout error:', xhr, status, error); // Debug log
+                // Handle error
+                let errorMessage = 'Payment failed. Please try again.';
+                try {
+                    if (xhr.responseText) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            errorMessage = response.message;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                    // If response is not JSON, show server error
+                    if (xhr.status === 404) {
+                        errorMessage = 'Checkout handler not found. Please contact support.';
+                    } else if (xhr.status === 500) {
+                        errorMessage = 'Server error. Please try again later.';
+                    }
+                }
+                cardErrors.textContent = errorMessage;
+                submitButton.disabled = false;
+                buttonText.textContent = 'Pay ₱' + $('#payment-total').text();
+                spinner.classList.add('d-none');
+            }
+        });
     });
 });

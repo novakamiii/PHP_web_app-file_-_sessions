@@ -51,14 +51,43 @@ $orders_data = [
     ['id' => '1005', 'user_id' => 1, 'amount' => '750.00', 'date' => '2025-01-14 11:30']
 ];
 
+// Add orders from session (newly placed orders)
+if (isset($_SESSION['user_orders'])) {
+    foreach ($_SESSION['user_orders'] as $order_id => $order_data) {
+        // Check if order already exists
+        $exists = false;
+        foreach ($orders_data as $existing_order) {
+            if ($existing_order['id'] == $order_id) {
+                $exists = true;
+                break;
+            }
+        }
+        
+        if (!$exists) {
+            // Format date for display
+            $order_date = isset($order_data['date']) ? date('Y-m-d H:i', strtotime($order_data['date'])) : date('Y-m-d H:i');
+            $orders_data[] = [
+                'id' => $order_id,
+                'user_id' => $order_data['user_id'],
+                'amount' => str_replace(',', '', $order_data['total']),
+                'date' => $order_date
+            ];
+        }
+    }
+}
+
 // Fetch user details for orders
 $user_ids = array_unique(array_column($orders_data, 'user_id'));
-$user_ids_str = implode(',', $user_ids);
-$users_query = "SELECT id, name, email FROM users WHERE id IN ($user_ids_str)";
-$users_result = mysqli_query($conn, $users_query);
-$users_map = [];
-while ($user_row = mysqli_fetch_assoc($users_result)) {
-    $users_map[$user_row['id']] = $user_row;
+if (!empty($user_ids)) {
+    $user_ids_str = implode(',', array_map('intval', $user_ids));
+    $users_query = "SELECT id, name, email FROM users WHERE id IN ($user_ids_str)";
+    $users_result = mysqli_query($conn, $users_query);
+    $users_map = [];
+    while ($user_row = mysqli_fetch_assoc($users_result)) {
+        $users_map[$user_row['id']] = $user_row;
+    }
+} else {
+    $users_map = [];
 }
 
 // Status mappings

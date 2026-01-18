@@ -1,5 +1,54 @@
 <?php
 include 'misc/headernavfooter.php';
+include 'misc/db.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+// Fetch cart items from database
+$cart_query = "SELECT c.*, p.img, p.category, p.price as unit_price 
+               FROM cart c 
+               JOIN products p ON c.prod_name = p.prod_name 
+               WHERE c.usr_id = ? 
+               ORDER BY c.dateadded DESC";
+$cart_stmt = mysqli_prepare($conn, $cart_query);
+mysqli_stmt_bind_param($cart_stmt, "i", $user_id);
+mysqli_stmt_execute($cart_stmt);
+$cart_result = mysqli_stmt_get_result($cart_stmt);
+$cart_items = [];
+$subtotal = 0;
+
+while ($item = mysqli_fetch_assoc($cart_result)) {
+    $cart_items[] = $item;
+    $subtotal += $item['price'];
+}
+
+mysqli_stmt_close($cart_stmt);
+
+// Calculate totals
+$shipping = 100.00;
+$total = $subtotal + $shipping;
+
+// Get user information for pre-filling form
+$user_query = "SELECT name, email, contact, address FROM users WHERE id = ? LIMIT 1";
+$user_stmt = mysqli_prepare($conn, $user_query);
+mysqli_stmt_bind_param($user_stmt, "i", $user_id);
+mysqli_stmt_execute($user_stmt);
+$user_result = mysqli_stmt_get_result($user_stmt);
+$user_info = mysqli_fetch_assoc($user_result);
+mysqli_stmt_close($user_stmt);
+mysqli_close($conn);
+
+// Redirect if cart is empty
+if (empty($cart_items)) {
+    header('Location: cart.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -125,46 +174,43 @@ include 'misc/headernavfooter.php';
                         <h4 class="mb-3">Order Summary</h4>
                         
                         <div class="mb-3">
-                            <!-- Example cart item - Backend will populate dynamically -->
-                            <div class="cart-item-review">
-                                <img src="img/products/vision/clyde.jpg" alt="Clyde">
-                                <div class="cart-item-details">
-                                    <div class="fw-bold">Clyde</div>
-                                    <div class="text-muted small">
-                                        Qty: 1
-                                        &middot; Size: small
+                            <?php if (empty($cart_items)): ?>
+                                <p class="text-muted">Your cart is empty.</p>
+                            <?php else: ?>
+                                <?php foreach ($cart_items as $item): 
+                                    $image_path = "img/products/{$item['category']}/{$item['img']}.jpg";
+                                ?>
+                                <div class="cart-item-review">
+                                    <img src="<?php echo htmlspecialchars($image_path); ?>" alt="<?php echo htmlspecialchars($item['prod_name']); ?>">
+                                    <div class="cart-item-details">
+                                        <div class="fw-bold"><?php echo htmlspecialchars($item['prod_name']); ?></div>
+                                        <div class="text-muted small">
+                                            Qty: <?php echo $item['quantity']; ?>
+                                            <?php if (!empty($item['frame_size'])): ?>
+                                                &middot; Size: <?php echo htmlspecialchars($item['frame_size']); ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="mt-1">₱<?php echo number_format($item['price'], 2); ?></div>
                                     </div>
-                                    <div class="mt-1">₱80.00</div>
                                 </div>
-                            </div>
-                            
-                            <div class="cart-item-review">
-                                <img src="img/products/sunglasses/barbara.jpg" alt="Barbara">
-                                <div class="cart-item-details">
-                                    <div class="fw-bold">Barbara</div>
-                                    <div class="text-muted small">
-                                        Qty: 2
-                                        &middot; Size: medium
-                                    </div>
-                                    <div class="mt-1">₱798.00</div>
-                                </div>
-                            </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
 
                         <hr>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Subtotal:</span>
-                            <span>₱<span id="checkout-subtotal">878.00</span></span>
+                            <span>₱<span id="checkout-subtotal"><?php echo number_format($subtotal, 2); ?></span></span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Shipping:</span>
-                            <span>₱<span id="checkout-shipping">100.00</span></span>
+                            <span>₱<span id="checkout-shipping"><?php echo number_format($shipping, 2); ?></span></span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <strong>Total:</strong>
-                            <strong>₱<span id="checkout-total">978.00</span></strong>
+                            <strong>₱<span id="checkout-total"><?php echo number_format($total, 2); ?></span></strong>
                         </div>
                     </div>
                 </div>
@@ -179,26 +225,29 @@ include 'misc/headernavfooter.php';
                             <h5 class="mb-3">Shipping Address</h5>
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="customer-name" value="" required>
+                                <input type="text" class="form-control" id="customer-name" 
+                                       value="<?php echo htmlspecialchars($user_info['name'] ?? ''); ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" id="customer-email" value="" required>
+                                <input type="email" class="form-control" id="customer-email" 
+                                       value="<?php echo htmlspecialchars($user_info['email'] ?? ''); ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Contact Number</label>
-                                <input type="text" class="form-control" id="customer-contact" value="" required>
+                                <input type="text" class="form-control" id="customer-contact" 
+                                       value="<?php echo htmlspecialchars($user_info['contact'] ?? ''); ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Shipping Address</label>
-                                <textarea class="form-control" id="customer-address" rows="3" required></textarea>
+                                <textarea class="form-control" id="customer-address" rows="3" required><?php echo htmlspecialchars($user_info['address'] ?? ''); ?></textarea>
                             </div>
                         </div>
 
                         <!-- Payment Method -->
                         <div class="mb-4">
                             <h5 class="mb-3">Payment Method</h5>
-                            <form id="payment-form" method="POST" action="">
+                            <form id="payment-form" method="POST" action="#" onsubmit="return false;">
                                 <!-- Backend: Replace this form submission with your actual payment processing endpoint -->
                                 
                                 <div class="payment-form-group">
@@ -243,7 +292,7 @@ include 'misc/headernavfooter.php';
                                 <div id="card-errors" role="alert"></div>
 
                                 <button type="submit" id="submit-payment" class="btn btn-primary btn-lg w-100 mt-3">
-                                    <span id="button-text">Pay ₱<span id="payment-total">978.00</span></span>
+                                    <span id="button-text">Pay ₱<span id="payment-total"><?php echo number_format($total, 2); ?></span></span>
                                     <span id="spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
                                 </button>
                             </form>
@@ -265,7 +314,7 @@ include 'misc/headernavfooter.php';
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/checkout.js"></script>
+    <script src="js/checkout.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>

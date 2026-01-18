@@ -96,7 +96,7 @@ while ($cart_item = mysqli_fetch_assoc($cart_result)) {
 }
 mysqli_stmt_close($cart_stmt);
 
-// Get orders for this user
+// Get orders for this user from mapping
 $user_orders = [];
 foreach ($orders_mapping as $order_id => $order_data) {
     if ($order_data['user_id'] == $user_id) {
@@ -106,6 +106,31 @@ foreach ($orders_mapping as $order_id => $order_data) {
             $order_data['status'] = $default_statuses[$order_id];
         }
         $user_orders[] = $order_data;
+    }
+}
+
+// Add orders from session (newly placed orders)
+if (isset($_SESSION['user_orders'])) {
+    foreach ($_SESSION['user_orders'] as $order_id => $order_data) {
+        if ($order_data['user_id'] == $user_id) {
+            // Check if order already exists
+            $exists = false;
+            foreach ($user_orders as $existing_order) {
+                if ($existing_order['id'] == $order_id) {
+                    $exists = true;
+                    break;
+                }
+            }
+            
+            if (!$exists) {
+                $order_data['id'] = $order_id;
+                $order_data['status'] = getOrderStatusForUser($order_id);
+                if ($order_data['status'] === 'pending') {
+                    $order_data['status'] = 'pending';
+                }
+                $user_orders[] = $order_data;
+            }
+        }
     }
 }
 

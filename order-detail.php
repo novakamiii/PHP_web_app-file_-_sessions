@@ -1,5 +1,124 @@
 <?php
 include 'misc/headernavfooter.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+$order_id = isset($_GET['id']) ? $_GET['id'] : null;
+
+// Initialize order statuses and refunds
+if (!isset($_SESSION['order_statuses'])) {
+    $_SESSION['order_statuses'] = [];
+}
+if (!isset($_SESSION['order_refunds'])) {
+    $_SESSION['order_refunds'] = [];
+}
+
+// Sample orders (for backward compatibility)
+$sample_orders = [
+    '1001' => [
+        'id' => '1001',
+        'user_id' => 1,
+        'date' => 'January 12, 2025 2:30 PM',
+        'total' => '978.00',
+        'subtotal' => '878.00',
+        'shipping' => '100.00',
+        'customer_name' => 'John Doe',
+        'customer_email' => 'john.doe@email.com',
+        'customer_contact' => '09123456789',
+        'customer_address' => '123 Main Street, City, Province 1234',
+        'items' => [
+            ['name' => 'Clyde', 'qty' => 1, 'size' => 'small', 'price' => '80.00', 'unit_price' => '80.00', 'img' => 'img/products/vision/clyde.jpg'],
+            ['name' => 'Barbara', 'qty' => 2, 'size' => 'medium', 'price' => '798.00', 'unit_price' => '399.00', 'img' => 'img/products/sunglasses/barbara.jpg']
+        ]
+    ],
+    '1002' => [
+        'id' => '1002',
+        'user_id' => 2,
+        'date' => 'January 10, 2025 10:15 AM',
+        'total' => '599.00',
+        'subtotal' => '499.00',
+        'shipping' => '100.00',
+        'customer_name' => 'Jane Smith',
+        'customer_email' => 'jane.smith@email.com',
+        'customer_contact' => '09234567890',
+        'customer_address' => '456 Oak Avenue, Province',
+        'items' => [
+            ['name' => 'Liv', 'qty' => 1, 'size' => '', 'price' => '599.00', 'unit_price' => '599.00', 'img' => 'img/products/sunglasses/liv.jpg']
+        ]
+    ]
+];
+
+// Get order from session or sample orders
+$order = null;
+if ($order_id) {
+    // Check session orders first
+    if (isset($_SESSION['user_orders'][$order_id])) {
+        $session_order = $_SESSION['user_orders'][$order_id];
+        // Verify it belongs to current user
+        if ($session_order['user_id'] == $user_id) {
+            $order = [
+                'id' => $order_id,
+                'date' => $session_order['date'],
+                'total' => $session_order['total'],
+                'subtotal' => $session_order['subtotal'],
+                'shipping' => $session_order['shipping'],
+                'customer_name' => $session_order['customer_name'],
+                'customer_email' => $session_order['customer_email'],
+                'customer_contact' => $session_order['customer_contact'],
+                'customer_address' => $session_order['customer_address'],
+                'items' => $session_order['items']
+            ];
+        }
+    } 
+    // Check sample orders
+    elseif (isset($sample_orders[$order_id])) {
+        $sample_order = $sample_orders[$order_id];
+        // Verify it belongs to current user
+        if ($sample_order['user_id'] == $user_id) {
+            $order = $sample_order;
+        }
+    }
+}
+
+// Redirect if order not found or doesn't belong to user
+if (!$order) {
+    header('Location: profile/orders-list.php');
+    exit;
+}
+
+// Get order status
+function getOrderStatus($order_id) {
+    if (isset($_SESSION['order_refunds'][$order_id]) && $_SESSION['order_refunds'][$order_id]['status'] === 'refunded') {
+        return 'refunded';
+    }
+    if (isset($_SESSION['order_statuses'][$order_id])) {
+        return $_SESSION['order_statuses'][$order_id];
+    }
+    return 'pending';
+}
+
+$order_status = getOrderStatus($order_id);
+$status_labels = [
+    'pending' => 'Pending',
+    'processing' => 'Processing',
+    'shipped' => 'Shipped',
+    'delivered' => 'Delivered',
+    'cancelled' => 'Cancelled',
+    'refunded' => 'Refunded'
+];
+$status_classes = [
+    'pending' => 'status-pending',
+    'processing' => 'status-processing',
+    'shipped' => 'status-shipped',
+    'delivered' => 'status-delivered',
+    'cancelled' => 'status-cancelled',
+    'refunded' => 'status-cancelled'
+];
 ?>
 
 <!DOCTYPE html>
@@ -153,12 +272,12 @@ include 'misc/headernavfooter.php';
                     <div class="invoice-title">Invoice</div>
                     <div class="d-flex justify-content-between align-items-start flex-wrap">
                         <div>
-                            <strong>Order #1001</strong><br>
-                            <small class="text-muted">Date: January 12, 2025 2:30 PM</small>
+                            <strong>Order #<?php echo $order['id']; ?></strong><br>
+                            <small class="text-muted">Date: <?php echo htmlspecialchars($order['date']); ?></small>
                         </div>
                         <div class="text-end">
-                            <span class="status-badge status-delivered">
-                                Delivered
+                            <span class="status-badge <?php echo $status_classes[$order_status]; ?>">
+                                <?php echo $status_labels[$order_status]; ?>
                             </span>
                         </div>
                     </div>
@@ -169,17 +288,15 @@ include 'misc/headernavfooter.php';
                     <div class="col-md-6">
                         <h5>Billing Information</h5>
                         <div>
-                            <strong>John Doe</strong><br>
-                            john.doe@email.com<br>
-                            09123456789
+                            <strong><?php echo htmlspecialchars($order['customer_name']); ?></strong><br>
+                            <?php echo htmlspecialchars($order['customer_email']); ?><br>
+                            <?php echo htmlspecialchars($order['customer_contact']); ?>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <h5>Shipping Address</h5>
                         <div>
-                            123 Main Street<br>
-                            Barangay Poblacion<br>
-                            City, Province 1234
+                            <?php echo nl2br(htmlspecialchars($order['customer_address'])); ?>
                         </div>
                     </div>
                 </div>
@@ -188,37 +305,26 @@ include 'misc/headernavfooter.php';
                 <div class="invoice-section">
                     <h5>Order Items</h5>
                     <div>
-                        <!-- Example item 1 - Backend will populate dynamically -->
+                        <?php foreach ($order['items'] as $item): 
+                            $unit_price = isset($item['unit_price']) ? $item['unit_price'] : (floatval($item['price']) / floatval($item['qty']));
+                        ?>
                         <div class="invoice-item">
-                            <img src="img/products/vision/clyde.jpg" alt="Clyde">
+                            <img src="<?php echo htmlspecialchars($item['img']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
                             <div class="invoice-item-details">
-                                <div class="fw-bold">Clyde</div>
+                                <div class="fw-bold"><?php echo htmlspecialchars($item['name']); ?></div>
                                 <div class="text-muted small">
-                                    Quantity: 1
-                                    &middot; Size: small
+                                    Quantity: <?php echo $item['qty']; ?>
+                                    <?php if (!empty($item['size'])): ?>
+                                        &middot; Size: <?php echo htmlspecialchars($item['size']); ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="text-end">
-                                <div>₱80.00 × 1</div>
-                                <div class="fw-bold">₱80.00</div>
+                                <div>₱<?php echo number_format($unit_price, 2); ?> × <?php echo $item['qty']; ?></div>
+                                <div class="fw-bold">₱<?php echo $item['price']; ?></div>
                             </div>
                         </div>
-
-                        <!-- Example item 2 -->
-                        <div class="invoice-item">
-                            <img src="img/products/sunglasses/barbara.jpg" alt="Barbara">
-                            <div class="invoice-item-details">
-                                <div class="fw-bold">Barbara</div>
-                                <div class="text-muted small">
-                                    Quantity: 2
-                                    &middot; Size: medium
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                <div>₱399.00 × 2</div>
-                                <div class="fw-bold">₱798.00</div>
-                            </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
@@ -227,10 +333,10 @@ include 'misc/headernavfooter.php';
                     <h5>Payment Information</h5>
                     <div>
                         <strong>Payment Method:</strong> Card<br>
-                        <strong>Transaction ID:</strong> pi_1234567890abcdef<br>
+                        <strong>Transaction ID:</strong> <?php echo 'TXN-' . $order['id']; ?><br>
                         <strong>Payment Status:</strong> 
-                        <span class="status-badge status-delivered">
-                            Delivered
+                        <span class="status-badge <?php echo $status_classes[$order_status]; ?>">
+                            <?php echo $status_labels[$order_status]; ?>
                         </span>
                     </div>
                 </div>
@@ -239,15 +345,15 @@ include 'misc/headernavfooter.php';
                 <div class="invoice-summary">
                     <div class="summary-row">
                         <span>Subtotal:</span>
-                        <span>₱878.00</span>
+                        <span>₱<?php echo $order['subtotal']; ?></span>
                     </div>
                     <div class="summary-row">
                         <span>Shipping:</span>
-                        <span>₱100.00</span>
+                        <span>₱<?php echo $order['shipping']; ?></span>
                     </div>
                     <div class="summary-row total">
                         <span>Total:</span>
-                        <span>₱978.00</span>
+                        <span>₱<?php echo $order['total']; ?></span>
                     </div>
                 </div>
             </div>

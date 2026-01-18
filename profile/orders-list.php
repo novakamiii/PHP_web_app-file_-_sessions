@@ -36,36 +36,51 @@ if (!isset($_SESSION['order_refunds'])) {
     $_SESSION['order_refunds'] = [];
 }
 
-// Order data with user mapping
+// Order data with user mapping (sample orders)
 $orders_mapping = [
-    '1001' => ['user_id' => 1, 'date' => 'January 12, 2025 2:30 PM', 'total' => '978.00', 'items' => [
+    '1001' => ['user_id' => 1, 'date' => 'January 12, 2025 2:30 PM', 'total' => '978.00', 'status' => 'delivered', 'items' => [
         ['name' => 'Clyde', 'qty' => 1, 'size' => 'small', 'price' => '80.00', 'img' => '../img/products/vision/clyde.jpg'],
         ['name' => 'Barbara', 'qty' => 2, 'size' => 'medium', 'price' => '798.00', 'img' => '../img/products/sunglasses/barbara.jpg']
     ]],
-    '1002' => ['user_id' => 2, 'date' => 'January 10, 2025 10:15 AM', 'total' => '599.00', 'items' => [
+    '1002' => ['user_id' => 2, 'date' => 'January 10, 2025 10:15 AM', 'total' => '599.00', 'status' => 'shipped', 'items' => [
         ['name' => 'Liv', 'qty' => 1, 'size' => '', 'price' => '599.00', 'img' => '../img/products/sunglasses/liv.jpg']
     ]],
-    '1003' => ['user_id' => 1, 'date' => 'January 8, 2025 4:45 PM', 'total' => '1,250.00', 'items' => [
+    '1003' => ['user_id' => 1, 'date' => 'January 8, 2025 4:45 PM', 'total' => '1,250.00', 'status' => 'processing', 'items' => [
         ['name' => 'Flora', 'qty' => 1, 'size' => 'large', 'price' => '980.00', 'img' => '../img/products/fashion/flora.jpg'],
         ['name' => 'Bonnie', 'qty' => 3, 'size' => '', 'price' => '270.00', 'img' => '../img/products/vision/bonnie.jpg']
     ]],
-    '1004' => ['user_id' => 2, 'date' => 'January 15, 2025 9:20 AM', 'total' => '489.00', 'items' => [
+    '1004' => ['user_id' => 2, 'date' => 'January 15, 2025 9:20 AM', 'total' => '489.00', 'status' => 'pending', 'items' => [
         ['name' => 'Aria', 'qty' => 1, 'size' => 'medium', 'price' => '489.00', 'img' => '../img/products/vision/aria.jpg']
     ]],
-    '1005' => ['user_id' => 1, 'date' => 'January 14, 2025 11:30 AM', 'total' => '750.00', 'items' => [
+    '1005' => ['user_id' => 1, 'date' => 'January 14, 2025 11:30 AM', 'total' => '750.00', 'status' => 'shipped', 'items' => [
         ['name' => 'Berlin', 'qty' => 1, 'size' => '', 'price' => '199.00', 'img' => '../img/products/sunglasses/berlin.jpg'],
         ['name' => 'Jess', 'qty' => 1, 'size' => '', 'price' => '389.00', 'img' => '../img/products/sunglasses/jess.jpg']
     ]]
 ];
 
+// Get orders from session (newly placed orders)
+$session_orders = [];
+if (isset($_SESSION['user_orders'])) {
+    foreach ($_SESSION['user_orders'] as $order_id => $order_data) {
+        if ($order_data['user_id'] == $user_id) {
+            // Always get the latest status from session (admin updates will be here)
+            $order_data['status'] = getOrderStatus($order_id);
+            $session_orders[$order_id] = $order_data;
+        }
+    }
+}
+
+// Merge session orders with sample orders (session orders take precedence)
+$all_orders = array_merge($orders_mapping, $session_orders);
+
 // Get orders for this user - ensure proper integer comparison
 $user_orders = [];
-foreach ($orders_mapping as $order_id => $order_data) {
+foreach ($all_orders as $order_id => $order_data) {
     // Ensure both are integers for strict comparison
     $order_user_id = intval($order_data['user_id']);
     if ($order_user_id === $user_id) {
         $order_data['id'] = $order_id;
-        // Add status to order data
+        // Always get the latest status from session (which may have been updated by admin)
         $order_data['status'] = getOrderStatus($order_id);
         $user_orders[] = $order_data;
     }
@@ -79,13 +94,18 @@ usort($user_orders, function($a, $b) {
 // Get status with fallback to default
 function getOrderStatus($order_id) {
     global $default_statuses;
+    // Ensure order_id is treated as string for consistent key matching
+    $order_id = (string)$order_id;
+    
     // Check if order is refunded first
     if (isset($_SESSION['order_refunds'][$order_id]) && $_SESSION['order_refunds'][$order_id]['status'] === 'refunded') {
         return 'refunded';
     }
+    // Check session statuses (where admin updates are stored)
     if (isset($_SESSION['order_statuses'][$order_id])) {
         return $_SESSION['order_statuses'][$order_id];
     }
+    // Fallback to default statuses
     return isset($default_statuses[$order_id]) ? $default_statuses[$order_id] : 'pending';
 }
 
@@ -235,21 +255,28 @@ $status_classes = [
             <div class="orders-list">
                 <?php if (!empty($user_orders)): ?>
                     <?php foreach ($user_orders as $order): 
-                        // Use status from order data if available, otherwise get it
-                        $status = isset($order['status']) ? $order['status'] : getOrderStatus($order['id']);
+                        // Always get the latest status directly from session (not cached order data)
+                        // This ensures admin updates are immediately reflected
+                        $order_id_key = $order['id'];
+                        $status = getOrderStatus($order_id_key);
+                        
+                        // Ensure status exists in labels/classes arrays, default to pending if invalid
+                        if (!isset($status_labels[$status])) {
+                            $status = 'pending';
+                        }
                     ?>
                     <div class="order-card">
                         <div class="order-header">
                             <div>
                                 <h5 class="mb-1">Order #<?php echo $order['id']; ?></h5>
-                                <small class="text-muted">Placed on <?php echo $order['date']; ?></small>
+                                <small class="text-muted">Placed on <?php echo htmlspecialchars($order['date']); ?></small>
                             </div>
                             <div class="text-end">
-                                <div class="order-status <?php echo $status_classes[$status]; ?>">
-                                    <?php echo $status_labels[$status]; ?>
+                                <div class="order-status <?php echo isset($status_classes[$status]) ? $status_classes[$status] : 'status-pending'; ?>">
+                                    <?php echo isset($status_labels[$status]) ? $status_labels[$status] : 'Pending'; ?>
                                 </div>
                                 <div class="mt-2">
-                                    <strong>₱<?php echo $order['total']; ?></strong>
+                                    <strong>₱<?php echo htmlspecialchars($order['total']); ?></strong>
                                 </div>
                             </div>
                         </div>

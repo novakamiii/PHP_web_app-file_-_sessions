@@ -18,6 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $address   = filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);
     $email     = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
     $contact   = filter_input(INPUT_POST, "contact", FILTER_SANITIZE_SPECIAL_CHARS);
+    $dateOfBirth = filter_input(INPUT_POST, "dateOfBirth", FILTER_SANITIZE_SPECIAL_CHARS);
+    $gender = filter_input(INPUT_POST, "gender", FILTER_SANITIZE_SPECIAL_CHARS);
+    $bio = filter_input(INPUT_POST, "bio", FILTER_SANITIZE_SPECIAL_CHARS);
     $user_id   = $_SESSION['user_id'];
 
     // Validate required fields
@@ -63,9 +66,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     // Update user information
-    $updateQuery = "UPDATE users SET name = ?, email = ?, contact = ?, address = ? WHERE id = ?";
+    $updateQuery = "UPDATE users SET name = ?, email = ?, contact = ?, address = ?, date_of_birth = ?, gender = ?, bio = ? WHERE id = ?";
     $updateStmt = mysqli_prepare($conn, $updateQuery);
-    mysqli_stmt_bind_param($updateStmt, "ssssi", $fullName, $email, $contact, $address, $user_id);
+    
+    // Convert empty strings to NULL for optional fields
+    $dateOfBirth = !empty($dateOfBirth) ? $dateOfBirth : null;
+    $gender = !empty($gender) ? $gender : null;
+    $bio = !empty($bio) ? $bio : null;
+    
+    mysqli_stmt_bind_param($updateStmt, "sssssssi", $fullName, $email, $contact, $address, $dateOfBirth, $gender, $bio, $user_id);
 
     if (mysqli_stmt_execute($updateStmt)) {
         // Update session variables

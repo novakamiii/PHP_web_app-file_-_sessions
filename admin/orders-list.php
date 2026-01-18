@@ -1,5 +1,11 @@
 <?php
+require_once '../misc/db.php';
 session_start();
+
+// Check if connection is valid
+if (!isset($conn) || !$conn || !($conn instanceof mysqli)) {
+    die("Database connection error. Please check your database configuration.");
+}
 
 // Default order statuses
 $default_statuses = [
@@ -18,13 +24,41 @@ if (!isset($_SESSION['order_statuses'])) {
     $_SESSION['order_statuses'] = $default_statuses;
 }
 
+// Initialize refund statuses in session if not exists
+if (!isset($_SESSION['order_refunds'])) {
+    $_SESSION['order_refunds'] = [];
+}
+
 // Get status with fallback to default
 function getOrderStatus($order_id) {
     global $default_statuses;
+    // Check if order is refunded first
+    if (isset($_SESSION['order_refunds'][$order_id]) && $_SESSION['order_refunds'][$order_id]['status'] === 'refunded') {
+        return 'refunded';
+    }
     if (isset($_SESSION['order_statuses'][$order_id])) {
         return $_SESSION['order_statuses'][$order_id];
     }
     return isset($default_statuses[$order_id]) ? $default_statuses[$order_id] : 'pending';
+}
+
+// Order data with user mapping - linking to actual database users
+$orders_data = [
+    ['id' => '1001', 'user_id' => 1, 'amount' => '978.00', 'date' => '2025-01-12 14:30'],
+    ['id' => '1002', 'user_id' => 2, 'amount' => '599.00', 'date' => '2025-01-10 10:15'],
+    ['id' => '1003', 'user_id' => 1, 'amount' => '1,250.00', 'date' => '2025-01-08 16:45'],
+    ['id' => '1004', 'user_id' => 2, 'amount' => '489.00', 'date' => '2025-01-15 09:20'],
+    ['id' => '1005', 'user_id' => 1, 'amount' => '750.00', 'date' => '2025-01-14 11:30']
+];
+
+// Fetch user details for orders
+$user_ids = array_unique(array_column($orders_data, 'user_id'));
+$user_ids_str = implode(',', $user_ids);
+$users_query = "SELECT id, name, email FROM users WHERE id IN ($user_ids_str)";
+$users_result = mysqli_query($conn, $users_query);
+$users_map = [];
+while ($user_row = mysqli_fetch_assoc($users_result)) {
+    $users_map[$user_row['id']] = $user_row;
 }
 
 // Status mappings
@@ -33,7 +67,8 @@ $status_classes = [
     'processing' => 'processing',
     'shipped' => 'processing',
     'delivered' => 'completed',
-    'cancelled' => 'pending'
+    'cancelled' => 'pending',
+    'refunded' => 'refunded'
 ];
 
 $status_labels = [
@@ -41,8 +76,11 @@ $status_labels = [
     'processing' => 'Processing',
     'shipped' => 'Shipped',
     'delivered' => 'Delivered',
-    'cancelled' => 'Cancelled'
+    'cancelled' => 'Cancelled',
+    'refunded' => 'Refunded'
 ];
+
+mysqli_close($conn);
 ?>
 <!DOCTYPE html>
 <html>
@@ -82,26 +120,20 @@ $status_labels = [
           </tr>
 
           <?php
-          $orders_data = [
-              ['id' => '1001', 'name' => 'John Doe', 'email' => 'john.doe@email.com', 'amount' => '978.00', 'date' => '2025-01-12 14:30'],
-              ['id' => '1002', 'name' => 'Jane Smith', 'email' => 'jane.smith@email.com', 'amount' => '599.00', 'date' => '2025-01-10 10:15'],
-              ['id' => '1003', 'name' => 'Michael Brown', 'email' => 'michael.brown@email.com', 'amount' => '1,250.00', 'date' => '2025-01-08 16:45'],
-              ['id' => '1004', 'name' => 'Sarah Johnson', 'email' => 'sarah.j@email.com', 'amount' => '489.00', 'date' => '2025-01-15 09:20'],
-              ['id' => '1005', 'name' => 'David Wilson', 'email' => 'david.wilson@email.com', 'amount' => '750.00', 'date' => '2025-01-14 11:30'],
-              ['id' => '1006', 'name' => 'Emily Davis', 'email' => 'emily.d@email.com', 'amount' => '320.00', 'date' => '2025-01-11 13:45'],
-              ['id' => '1007', 'name' => 'Robert Miller', 'email' => 'robert.m@email.com', 'amount' => '899.00', 'date' => '2025-01-13 15:00'],
-              ['id' => '1008', 'name' => 'Lisa Anderson', 'email' => 'lisa.a@email.com', 'amount' => '1,089.00', 'date' => '2025-01-09 10:10']
-          ];
-
           foreach ($orders_data as $order):
               $status = getOrderStatus($order['id']);
               $status_class = $status_classes[$status];
               $status_label = $status_labels[$status];
+              
+              // Get user info
+              $user_info = isset($users_map[$order['user_id']]) ? $users_map[$order['user_id']] : null;
+              $customer_name = $user_info ? htmlspecialchars($user_info['name']) : 'Unknown User';
+              $customer_email = $user_info ? htmlspecialchars($user_info['email']) : 'N/A';
           ?>
           <tr>
             <td>ORD-<?php echo $order['id']; ?></td>
-            <td><?php echo htmlspecialchars($order['name']); ?></td>
-            <td><?php echo htmlspecialchars($order['email']); ?></td>
+            <td><?php echo $customer_name; ?></td>
+            <td><?php echo $customer_email; ?></td>
             <td>₱<?php echo $order['amount']; ?></td>
             <td><span class="status <?php echo $status_class; ?>"><?php echo $status_label; ?></span></td>
             <td><?php echo $order['date']; ?></td>
@@ -116,9 +148,6 @@ $status_labels = [
         <!-- PAGINATION -->
         <ul class="pagination">
           <li><a href="#" class="active">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">Next</a></li>
         </ul>
 
       </div>

@@ -6,13 +6,43 @@ if (!isset($_SESSION['order_statuses'])) {
     $_SESSION['order_statuses'] = [];
 }
 
-// Handle status update
+// Initialize refund statuses in session if not exists
+if (!isset($_SESSION['order_refunds'])) {
+    $_SESSION['order_refunds'] = [];
+}
+
+// Handle refund processing
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_refund'])) {
+    $order_id = $_POST['order_id'];
+    $refund_reason = isset($_POST['refund_reason']) ? $_POST['refund_reason'] : '';
+    $refund_amount = $_POST['refund_amount'];
+    
+    // Mark order as refunded
+    $_SESSION['order_refunds'][$order_id] = [
+        'status' => 'refunded',
+        'refunded_at' => date('Y-m-d H:i:s'),
+        'refund_amount' => $refund_amount,
+        'reason' => $refund_reason
+    ];
+    
+    // Set order status to refunded
+    $_SESSION['order_statuses'][$order_id] = 'refunded';
+    
+    header('Location: order-details.php?id=' . $order_id . '&refunded=1');
+    exit;
+}
+
+// Handle status update (only if not refunded)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $order_id = $_POST['order_id'];
     $new_status = $_POST['status'];
-    $_SESSION['order_statuses'][$order_id] = $new_status;
-    header('Location: order-details.php?id=' . $order_id . '&updated=1');
-    exit;
+    
+    // Don't allow status update if order is refunded
+    if (!isset($_SESSION['order_refunds'][$order_id]) || $_SESSION['order_refunds'][$order_id]['status'] !== 'refunded') {
+        $_SESSION['order_statuses'][$order_id] = $new_status;
+        header('Location: order-details.php?id=' . $order_id . '&updated=1');
+        exit;
+    }
 }
 
 // Sample order data - in real app, this would come from database
@@ -166,9 +196,18 @@ $order_id = isset($_GET['id']) ? $_GET['id'] : '1001';
 // Get order data or default to first order
 $order = isset($orders[$order_id]) ? $orders[$order_id] : $orders['1001'];
 
+// Check if order is refunded
+$is_refunded = isset($_SESSION['order_refunds'][$order_id]) && $_SESSION['order_refunds'][$order_id]['status'] === 'refunded';
+$refund_info = $is_refunded ? $_SESSION['order_refunds'][$order_id] : null;
+
 // Override status from session if exists
 if (isset($_SESSION['order_statuses'][$order_id])) {
     $order['status'] = $_SESSION['order_statuses'][$order_id];
+}
+
+// If refunded, set status to refunded
+if ($is_refunded) {
+    $order['status'] = 'refunded';
 }
 
 // Status class mapping
@@ -177,7 +216,8 @@ $status_classes = [
     'processing' => 'processing',
     'shipped' => 'processing',
     'delivered' => 'completed',
-    'cancelled' => 'pending'
+    'cancelled' => 'pending',
+    'refunded' => 'refunded'
 ];
 
 $status_labels = [
@@ -185,8 +225,11 @@ $status_labels = [
     'processing' => 'Processing',
     'shipped' => 'Shipped',
     'delivered' => 'Delivered',
-    'cancelled' => 'Cancelled'
+    'cancelled' => 'Cancelled',
+    'refunded' => 'Refunded'
 ];
+
+$status_classes['refunded'] = 'pending'; // Use pending style for refunded
 ?>
 <!DOCTYPE html>
 <html>
@@ -341,6 +384,85 @@ $status_labels = [
     form {
       display: inline;
     }
+
+    .refund-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .refund-modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 25px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .refund-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .refund-modal-header h3 {
+      margin: 0;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .close-modal:hover {
+      color: #000;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .refund-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -371,6 +493,21 @@ $status_labels = [
         </div>
       <?php endif; ?>
 
+      <?php if (isset($_GET['refunded']) && $_GET['refunded'] == '1'): ?>
+        <div class="alert" style="background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;">
+          Refund processed successfully! Amount: ₱<?php echo isset($refund_info['refund_amount']) ? $refund_info['refund_amount'] : $order['total']; ?>
+        </div>
+      <?php endif; ?>
+
+      <?php if ($is_refunded && $refund_info): ?>
+        <div class="alert" style="background: #fff3cd; color: #856404; border: 1px solid #ffc107;">
+          <strong>Refunded:</strong> This order was refunded on <?php echo date('F j, Y g:i A', strtotime($refund_info['refunded_at'])); ?>
+          <?php if (!empty($refund_info['reason'])): ?>
+            <br><small>Reason: <?php echo htmlspecialchars($refund_info['reason']); ?></small>
+          <?php endif; ?>
+        </div>
+      <?php endif; ?>
+
       <h2>Order #ORD-<?php echo $order['id']; ?></h2>
 
       <!-- Order Information -->
@@ -388,6 +525,7 @@ $status_labels = [
           <span class="detail-label">Order Status:</span>
           <span class="detail-value">
             <span class="status <?php echo $status_classes[$order['status']]; ?>"><?php echo $status_labels[$order['status']]; ?></span>
+            <?php if (!$is_refunded): ?>
             <form method="POST" style="display: inline-block;">
               <input type="hidden" name="update_status" value="1">
               <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
@@ -399,8 +537,21 @@ $status_labels = [
                 <option value="cancelled" <?php echo $order['status'] == 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
               </select>
             </form>
+            <?php else: ?>
+            <span style="color: #856404; font-size: 12px; margin-left: 10px;">(Status locked - Order refunded)</span>
+            <?php endif; ?>
           </span>
         </div>
+        <?php if ($is_refunded && $refund_info): ?>
+        <div class="detail-row">
+          <span class="detail-label">Refund Amount:</span>
+          <span class="detail-value" style="color: #dc2626; font-weight: 600;">₱<?php echo number_format($refund_info['refund_amount'], 2); ?></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Refund Date:</span>
+          <span class="detail-value"><?php echo date('F j, Y g:i A', strtotime($refund_info['refunded_at'])); ?></span>
+        </div>
+        <?php endif; ?>
         <div class="detail-row">
           <span class="detail-label">Total Amount:</span>
           <span class="detail-value" style="font-weight: 600; font-size: 18px;">₱<?php echo $order['total']; ?></span>
@@ -477,17 +628,82 @@ $status_labels = [
       <div class="detail-section">
         <h3>Actions</h3>
         <div class="action-buttons">
+          <?php if (!$is_refunded): ?>
           <button class="btn btn-primary" onclick="alert('Invoice will be sent to <?php echo htmlspecialchars($order['email']); ?>')">
             <i class="fas fa-file-invoice"></i> Send Invoice
           </button>
-          <button class="btn btn-danger" onclick="if(confirm('Are you sure you want to process a refund for this order?')) { alert('Refund processed'); }">
+          <button class="btn btn-danger" onclick="openRefundModal()">
             <i class="fas fa-undo"></i> Process Refund
           </button>
+          <?php else: ?>
+          <button class="btn btn-secondary" disabled style="opacity: 0.6; cursor: not-allowed;">
+            <i class="fas fa-undo"></i> Already Refunded
+          </button>
+          <?php endif; ?>
           <a href="orders-list.php" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Back to Orders
           </a>
         </div>
       </div>
+
+      <!-- Refund Modal -->
+      <div id="refundModal" class="refund-modal">
+        <div class="refund-modal-content">
+          <div class="refund-modal-header">
+            <h3>Process Refund</h3>
+            <button class="close-modal" onclick="closeRefundModal()">&times;</button>
+          </div>
+          <form method="POST" id="refundForm">
+            <input type="hidden" name="process_refund" value="1">
+            <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+            
+            <div class="form-group">
+              <label>Order Total:</label>
+              <input type="text" value="₱<?php echo $order['total']; ?>" readonly style="background: #f3f4f6;">
+            </div>
+
+            <div class="form-group">
+              <label for="refund_amount">Refund Amount <span style="color: #dc3545;">*</span>:</label>
+              <input type="number" id="refund_amount" name="refund_amount" step="0.01" min="0" max="<?php echo str_replace(',', '', $order['total']); ?>" value="<?php echo str_replace(',', '', $order['total']); ?>" required>
+            </div>
+
+            <div class="form-group">
+              <label for="refund_reason">Refund Reason (Optional):</label>
+              <textarea id="refund_reason" name="refund_reason" placeholder="Enter reason for refund..."></textarea>
+            </div>
+
+            <div class="refund-actions">
+              <button type="button" class="btn btn-secondary" onclick="closeRefundModal()">Cancel</button>
+              <button type="submit" class="btn btn-danger" onclick="return confirmRefund()">
+                <i class="fas fa-undo"></i> Process Refund
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <script>
+        function openRefundModal() {
+          document.getElementById('refundModal').style.display = 'block';
+        }
+
+        function closeRefundModal() {
+          document.getElementById('refundModal').style.display = 'none';
+        }
+
+        function confirmRefund() {
+          const amount = document.getElementById('refund_amount').value;
+          return confirm('Are you sure you want to process a refund of ₱' + parseFloat(amount).toFixed(2) + '? This action cannot be undone.');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+          const modal = document.getElementById('refundModal');
+          if (event.target == modal) {
+            closeRefundModal();
+          }
+        }
+      </script>
 
     </div>
 

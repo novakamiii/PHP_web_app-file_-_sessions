@@ -37,7 +37,6 @@
     <label for="orders" class="menu-link">Orders</label>
     <div class="submenu">
       <a href="orders-list.php">Orders List</a>
-      <a href="order-details.php">Order Details</a>
     </div>
 
     <input type="checkbox" id="users">

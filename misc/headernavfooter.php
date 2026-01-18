@@ -8,6 +8,20 @@ if (session_status() === PHP_SESSION_NONE) {
  */
 function navbarcall()
 {
+    // Determine base path based on current directory
+    $script_path = $_SERVER['PHP_SELF'];
+    $base_path = '';
+    $user_info_link = 'profile/user-information.php';
+    $orders_link = 'profile/orders-list.php';
+    
+    // If we're in profile directory, use relative paths for profile pages (no base_path prefix)
+    if (strpos($script_path, '/profile/') !== false) {
+        $base_path = '../';
+        // Profile pages are in the same directory, so no base_path needed
+        $user_info_link = 'user-information.php';
+        $orders_link = 'orders-list.php';
+    }
+    
     //Checks if user is logged in:
 
     //Not logged in:
@@ -24,15 +38,27 @@ function navbarcall()
     else
     {
         $name = $_SESSION['user_name'];
+        
+        // Build profile links - if in profile directory, don't use base_path
+        if (strpos($script_path, '/profile/') !== false) {
+            // Already in profile directory - use relative paths without base_path
+            $profile_user_info = 'user-information.php';
+            $profile_orders = 'orders-list.php';
+        } else {
+            // In root directory - use base_path with profile/ prefix
+            $profile_user_info = 'profile/user-information.php';
+            $profile_orders = 'profile/orders-list.php';
+        }
+        
         $logSignHTML = <<<HTML
             <li><p class=" dropdown-item fw-bold">Hi, $name!</p></li>
             <hr>
-            <li><a class="dropdown-item" href="profile/user-information.php"><i class="fas fa-user me-2"></i>User Information</a></li>
-            <li><a class="dropdown-item" href="profile/orders-list.php"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
+            <li><a class="dropdown-item" href="{$profile_user_info}"><i class="fas fa-user me-2"></i>User Information</a></li>
+            <li><a class="dropdown-item" href="{$profile_orders}"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
             <li><a class="dropdown-item" href="#" id="logoutButton">Logout</a></li>
         HTML;
         $cartHTML = <<<HTML
-            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart</a></li>
+            <li class="nav-item"><a class="nav-link" href="{$base_path}cart.php">🛒 Cart</a></li>
         HTML;
     }
 
@@ -40,12 +66,12 @@ function navbarcall()
     $html = <<<HTML
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="index.php">Silicon</a>
+                <a class="navbar-brand" href="{$base_path}index.php">Silicon</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <form class="search-nav d-flex ms-3 me-3" action="search.php" method="GET">
+                <form class="search-nav d-flex ms-3 me-3" action="{$base_path}search.php" method="GET">
                     <input 
                         class="form-control me-2" 
                         type="search" 
@@ -59,10 +85,10 @@ function navbarcall()
 
                 <div class="collapse navbar-collapse" id="mainNavbar">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="products.php">Products</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact-us.php">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{$base_path}index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{$base_path}products.php">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{$base_path}about.php">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{$base_path}contact-us.php">Contact Us</a></li>
                         $cartHTML
 
                         <!-- Account Dropdown -->

@@ -1,7 +1,18 @@
 <?php
 include '../misc/headernavfooter.php';
+// Session is already started in headernavfooter.php
 
-session_start();
+// Get logged-in user ID
+$user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 0;
+
+// Redirect if not logged in
+if ($user_id <= 0) {
+    header('Location: ../index.php');
+    exit;
+}
+
+// Debug: Uncomment to check user_id
+// error_log("Current user_id: " . $user_id);
 
 // Default order statuses
 $default_statuses = [
@@ -20,9 +31,58 @@ if (!isset($_SESSION['order_statuses'])) {
     $_SESSION['order_statuses'] = $default_statuses;
 }
 
+// Initialize refund statuses in session if not exists
+if (!isset($_SESSION['order_refunds'])) {
+    $_SESSION['order_refunds'] = [];
+}
+
+// Order data with user mapping
+$orders_mapping = [
+    '1001' => ['user_id' => 1, 'date' => 'January 12, 2025 2:30 PM', 'total' => '978.00', 'items' => [
+        ['name' => 'Clyde', 'qty' => 1, 'size' => 'small', 'price' => '80.00', 'img' => '../img/products/vision/clyde.jpg'],
+        ['name' => 'Barbara', 'qty' => 2, 'size' => 'medium', 'price' => '798.00', 'img' => '../img/products/sunglasses/barbara.jpg']
+    ]],
+    '1002' => ['user_id' => 2, 'date' => 'January 10, 2025 10:15 AM', 'total' => '599.00', 'items' => [
+        ['name' => 'Liv', 'qty' => 1, 'size' => '', 'price' => '599.00', 'img' => '../img/products/sunglasses/liv.jpg']
+    ]],
+    '1003' => ['user_id' => 1, 'date' => 'January 8, 2025 4:45 PM', 'total' => '1,250.00', 'items' => [
+        ['name' => 'Flora', 'qty' => 1, 'size' => 'large', 'price' => '980.00', 'img' => '../img/products/fashion/flora.jpg'],
+        ['name' => 'Bonnie', 'qty' => 3, 'size' => '', 'price' => '270.00', 'img' => '../img/products/vision/bonnie.jpg']
+    ]],
+    '1004' => ['user_id' => 2, 'date' => 'January 15, 2025 9:20 AM', 'total' => '489.00', 'items' => [
+        ['name' => 'Aria', 'qty' => 1, 'size' => 'medium', 'price' => '489.00', 'img' => '../img/products/vision/aria.jpg']
+    ]],
+    '1005' => ['user_id' => 1, 'date' => 'January 14, 2025 11:30 AM', 'total' => '750.00', 'items' => [
+        ['name' => 'Berlin', 'qty' => 1, 'size' => '', 'price' => '199.00', 'img' => '../img/products/sunglasses/berlin.jpg'],
+        ['name' => 'Jess', 'qty' => 1, 'size' => '', 'price' => '389.00', 'img' => '../img/products/sunglasses/jess.jpg']
+    ]]
+];
+
+// Get orders for this user - ensure proper integer comparison
+$user_orders = [];
+foreach ($orders_mapping as $order_id => $order_data) {
+    // Ensure both are integers for strict comparison
+    $order_user_id = intval($order_data['user_id']);
+    if ($order_user_id === $user_id) {
+        $order_data['id'] = $order_id;
+        // Add status to order data
+        $order_data['status'] = getOrderStatus($order_id);
+        $user_orders[] = $order_data;
+    }
+}
+
+// Sort orders by date (newest first)
+usort($user_orders, function($a, $b) {
+    return strtotime($b['date']) - strtotime($a['date']);
+});
+
 // Get status with fallback to default
 function getOrderStatus($order_id) {
     global $default_statuses;
+    // Check if order is refunded first
+    if (isset($_SESSION['order_refunds'][$order_id]) && $_SESSION['order_refunds'][$order_id]['status'] === 'refunded') {
+        return 'refunded';
+    }
     if (isset($_SESSION['order_statuses'][$order_id])) {
         return $_SESSION['order_statuses'][$order_id];
     }
@@ -35,7 +95,8 @@ $status_labels = [
     'processing' => 'Processing',
     'shipped' => 'Shipped',
     'delivered' => 'Delivered',
-    'cancelled' => 'Cancelled'
+    'cancelled' => 'Cancelled',
+    'refunded' => 'Refunded'
 ];
 
 // Status class mapping
@@ -44,7 +105,8 @@ $status_classes = [
     'processing' => 'status-processing',
     'shipped' => 'status-shipped',
     'delivered' => 'status-delivered',
-    'cancelled' => 'status-cancelled'
+    'cancelled' => 'status-cancelled',
+    'refunded' => 'status-cancelled' // Use cancelled style for refunded
 ];
 ?>
 
@@ -169,155 +231,64 @@ $status_classes = [
                 <a href="../products.php" class="btn btn-outline-primary">Continue Shopping</a>
             </div>
 
-            <!-- Example orders - Backend will populate dynamically -->
+            <!-- Orders List - Dynamic based on logged-in user -->
             <div class="orders-list">
-                <!-- Order 1 -->
-                <div class="order-card">
-                    <div class="order-header">
-                        <div>
-                            <h5 class="mb-1">Order #1001</h5>
-                            <small class="text-muted">Placed on January 12, 2025 2:30 PM</small>
-                        </div>
-                        <div class="text-end">
-                            <div class="order-status <?php echo $status_classes[getOrderStatus('1001')]; ?>">
-                                <?php echo $status_labels[getOrderStatus('1001')]; ?>
-                            </div>
-                            <div class="mt-2">
-                                <strong>₱978.00</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="order-items">
-                        <div class="order-item">
-                            <img src="../img/products/vision/clyde.jpg" alt="Clyde">
-                            <div class="flex-fill">
-                                <div class="fw-bold">Clyde</div>
-                                <div class="text-muted small">
-                                    Qty: 1
-                                    &middot; Size: small
-                                </div>
+                <?php if (!empty($user_orders)): ?>
+                    <?php foreach ($user_orders as $order): 
+                        // Use status from order data if available, otherwise get it
+                        $status = isset($order['status']) ? $order['status'] : getOrderStatus($order['id']);
+                    ?>
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <h5 class="mb-1">Order #<?php echo $order['id']; ?></h5>
+                                <small class="text-muted">Placed on <?php echo $order['date']; ?></small>
                             </div>
                             <div class="text-end">
-                                ₱80.00
-                            </div>
-                        </div>
-                        <div class="order-item">
-                            <img src="../img/products/sunglasses/barbara.jpg" alt="Barbara">
-                            <div class="flex-fill">
-                                <div class="fw-bold">Barbara</div>
-                                <div class="text-muted small">
-                                    Qty: 2
-                                    &middot; Size: medium
+                                <div class="order-status <?php echo $status_classes[$status]; ?>">
+                                    <?php echo $status_labels[$status]; ?>
+                                </div>
+                                <div class="mt-2">
+                                    <strong>₱<?php echo $order['total']; ?></strong>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                ₱798.00
-                            </div>
                         </div>
-                    </div>
 
-                    <div class="mt-3 text-end">
-                        <a href="../order-detail.php?id=1001" class="btn btn-outline-primary btn-sm">View Details</a>
-                    </div>
-                </div>
-
-                <!-- Order 2 -->
-                <div class="order-card">
-                    <div class="order-header">
-                        <div>
-                            <h5 class="mb-1">Order #1002</h5>
-                            <small class="text-muted">Placed on January 10, 2025 10:15 AM</small>
-                        </div>
-                        <div class="text-end">
-                            <div class="order-status <?php echo $status_classes[getOrderStatus('1002')]; ?>">
-                                <?php echo $status_labels[getOrderStatus('1002')]; ?>
-                            </div>
-                            <div class="mt-2">
-                                <strong>₱599.00</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="order-items">
-                        <div class="order-item">
-                            <img src="../img/products/sunglasses/liv.jpg" alt="Liv">
-                            <div class="flex-fill">
-                                <div class="fw-bold">Liv</div>
-                                <div class="text-muted small">
-                                    Qty: 1
+                        <div class="order-items">
+                            <?php foreach ($order['items'] as $item): ?>
+                            <div class="order-item">
+                                <img src="<?php echo htmlspecialchars($item['img']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
+                                <div class="flex-fill">
+                                    <div class="fw-bold"><?php echo htmlspecialchars($item['name']); ?></div>
+                                    <div class="text-muted small">
+                                        Qty: <?php echo $item['qty']; ?>
+                                        <?php if (!empty($item['size'])): ?>
+                                            &middot; Size: <?php echo htmlspecialchars($item['size']); ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    ₱<?php echo number_format($item['price'], 2); ?>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                ₱599.00
-                            </div>
+                            <?php endforeach; ?>
                         </div>
-                    </div>
 
-                    <div class="mt-3 text-end">
-                        <a href="../order-detail.php?id=1002" class="btn btn-outline-primary btn-sm">View Details</a>
-                    </div>
-                </div>
-
-                <!-- Order 3 -->
-                <div class="order-card">
-                    <div class="order-header">
-                        <div>
-                            <h5 class="mb-1">Order #1003</h5>
-                            <small class="text-muted">Placed on January 8, 2025 4:45 PM</small>
-                        </div>
-                        <div class="text-end">
-                            <div class="order-status <?php echo $status_classes[getOrderStatus('1003')]; ?>">
-                                <?php echo $status_labels[getOrderStatus('1003')]; ?>
-                            </div>
-                            <div class="mt-2">
-                                <strong>₱1,250.00</strong>
-                            </div>
+                        <div class="mt-3 text-end">
+                            <a href="../order-detail.php?id=<?php echo $order['id']; ?>" class="btn btn-outline-primary btn-sm">View Details</a>
                         </div>
                     </div>
-
-                    <div class="order-items">
-                        <div class="order-item">
-                            <img src="../img/products/fashion/flora.jpg" alt="Flora">
-                            <div class="flex-fill">
-                                <div class="fw-bold">Flora</div>
-                                <div class="text-muted small">
-                                    Qty: 1
-                                    &middot; Size: large
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                ₱980.00
-                            </div>
-                        </div>
-                        <div class="order-item">
-                            <img src="../img/products/vision/bonnie.jpg" alt="Bonnie">
-                            <div class="flex-fill">
-                                <div class="fw-bold">Bonnie</div>
-                                <div class="text-muted small">
-                                    Qty: 3
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                ₱270.00
-                            </div>
-                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Empty state -->
+                    <div class="empty-state">
+                        <img src="../img/pageimg/empty-cart.png" alt="No orders">
+                        <h3>No orders yet</h3>
+                        <p class="text-muted">You haven't placed any orders yet. Start shopping to see your orders here.</p>
+                        <a href="../products.php" class="btn btn-primary mt-3">Browse Products</a>
                     </div>
-
-                    <div class="mt-3 text-end">
-                        <a href="../order-detail.php?id=1003" class="btn btn-outline-primary btn-sm">View Details</a>
-                    </div>
-                </div>
+                <?php endif; ?>
             </div>
-
-            <!-- Empty state example ( if no orders) -->
-            
-            <!-- <div class="empty-state">
-                <img src="../img/pageimg/empty-cart.png" alt="No orders">
-                <h3>No orders yet</h3>
-                <p class="text-muted">You haven't placed any orders yet. Start shopping to see your orders here.</p>
-                <a href="../products.php" class="btn btn-primary mt-3">Browse Products</a>
-            </div> -->
         
         </div>
     </section>

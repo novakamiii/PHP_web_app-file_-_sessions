@@ -1,0 +1,6 @@
+-- Add new columns to users table for profile customization
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS profile_picture VARCHAR(255) DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS date_of_birth DATE DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS gender VARCHAR(20) DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS bio TEXT DEFAULT NULL;

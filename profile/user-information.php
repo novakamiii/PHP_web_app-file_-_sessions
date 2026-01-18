@@ -10,14 +10,42 @@ if (!isset($_SESSION['user_id'])) {
 // Get current user information
 include '../misc/db.php';
 $user_id = $_SESSION['user_id'];
-$query = "SELECT name, email, contact, address FROM users WHERE id = ? LIMIT 1";
-$stmt = mysqli_prepare($conn, $query);
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$user = mysqli_fetch_assoc($result);
-mysqli_stmt_close($stmt);
+
+// Try to get all fields, but handle gracefully if new columns don't exist yet
+try {
+    $query = "SELECT name, email, contact, address, profile_picture, date_of_birth, gender, bio FROM users WHERE id = ? LIMIT 1";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt);
+} catch (mysqli_sql_exception $e) {
+    // If new columns don't exist, fetch without them
+    $query = "SELECT name, email, contact, address FROM users WHERE id = ? LIMIT 1";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt);
+    
+    // Set default values for new fields
+    $user['profile_picture'] = null;
+    $user['date_of_birth'] = null;
+    $user['gender'] = null;
+    $user['bio'] = null;
+}
+
 mysqli_close($conn);
+
+// Set default profile picture if none exists
+if (!empty($user['profile_picture']) && file_exists('../' . $user['profile_picture'])) {
+    $profile_picture = '../' . $user['profile_picture'];
+} else {
+    // Use a default avatar or placeholder
+    $profile_picture = 'https://via.placeholder.com/150/6c757d/ffffff?text=' . urlencode(substr($user['name'], 0, 1));
+}
 
 // Split name into first and last name if possible
 $nameParts = explode(' ', $user['name'], 2);
@@ -139,6 +167,69 @@ $lastName = $nameParts[1] ?? '';
             color: #212529;
             word-break: break-word;
         }
+
+        .profile-picture-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .profile-picture-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-picture:hover {
+            border-color: #0d6efd;
+            transform: scale(1.05);
+        }
+
+        .profile-picture-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #0d6efd;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: all 0.3s ease;
+        }
+
+        .profile-picture-overlay:hover {
+            background: #0b5ed7;
+            transform: scale(1.1);
+        }
+
+        #profilePictureInput {
+            display: none;
+        }
+
+        .upload-progress {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .upload-progress.show {
+            display: block;
+        }
     </style>
 </head>
 
@@ -172,6 +263,33 @@ $lastName = $nameParts[1] ?? '';
                             </button>
                         </div>
 
+                        <!-- Profile Picture -->
+                        <div class="profile-picture-container">
+                            <div class="profile-picture-wrapper">
+                                <img src="<?php echo htmlspecialchars($profile_picture); ?>" 
+                                     alt="Profile Picture" 
+                                     class="profile-picture" 
+                                     id="viewProfilePicture"
+                                     onclick="document.getElementById('profilePictureInput').click()">
+                                <div class="profile-picture-overlay" onclick="document.getElementById('profilePictureInput').click()">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-0">Click to change profile picture</p>
+                            <div class="upload-progress" id="uploadProgress">
+                                <div class="progress mt-2">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" 
+                                         style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted">Uploading...</small>
+                            </div>
+                            <input type="file" 
+                                   id="profilePictureInput" 
+                                   accept="image/jpeg,image/jpg,image/png,image/gif"
+                                   style="display: none;">
+                        </div>
+
                         <div class="info-item">
                             <div class="info-label">Full Name</div>
                             <div class="info-value"><?php echo htmlspecialchars($user['name']); ?></div>
@@ -187,10 +305,31 @@ $lastName = $nameParts[1] ?? '';
                             <div class="info-value"><?php echo htmlspecialchars($user['contact']); ?></div>
                         </div>
 
+                        <?php if (!empty($user['date_of_birth'])): ?>
+                        <div class="info-item">
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value"><?php echo date('F j, Y', strtotime($user['date_of_birth'])); ?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($user['gender'])): ?>
+                        <div class="info-item">
+                            <div class="info-label">Gender</div>
+                            <div class="info-value"><?php echo htmlspecialchars(ucfirst($user['gender'])); ?></div>
+                        </div>
+                        <?php endif; ?>
+
                         <div class="info-item">
                             <div class="info-label">Address</div>
                             <div class="info-value"><?php echo nl2br(htmlspecialchars($user['address'])); ?></div>
                         </div>
+
+                        <?php if (!empty($user['bio'])): ?>
+                        <div class="info-item">
+                            <div class="info-label">About Me</div>
+                            <div class="info-value"><?php echo nl2br(htmlspecialchars($user['bio'])); ?></div>
+                        </div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Edit Mode -->
@@ -261,6 +400,35 @@ $lastName = $nameParts[1] ?? '';
                                 <small class="form-text text-muted">Max 500 characters</small>
                             </div>
 
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" 
+                                           value="<?php echo !empty($user['date_of_birth']) ? htmlspecialchars($user['date_of_birth']) : ''; ?>"
+                                           max="<?php echo date('Y-m-d', strtotime('-13 years')); ?>">
+                                    <small class="form-text text-muted">Optional - Must be at least 13 years old</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-control" id="gender" name="gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="male" <?php echo ($user['gender'] === 'male') ? 'selected' : ''; ?>>Male</option>
+                                        <option value="female" <?php echo ($user['gender'] === 'female') ? 'selected' : ''; ?>>Female</option>
+                                        <option value="other" <?php echo ($user['gender'] === 'other') ? 'selected' : ''; ?>>Other</option>
+                                        <option value="prefer_not_to_say" <?php echo ($user['gender'] === 'prefer_not_to_say') ? 'selected' : ''; ?>>Prefer not to say</option>
+                                    </select>
+                                    <small class="form-text text-muted">Optional</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="bio" class="form-label">About Me</label>
+                                <textarea class="form-control" id="bio" name="bio" rows="4" 
+                                          maxlength="500"
+                                          placeholder="Tell us a little about yourself..."><?php echo htmlspecialchars($user['bio'] ?? ''); ?></textarea>
+                                <small class="form-text text-muted">Optional - Max 500 characters</small>
+                            </div>
+
                             <div class="text-end mt-4">
                                 <button type="button" class="btn btn-outline-secondary me-2" id="cancelBtn2">
                                     Cancel
@@ -285,6 +453,100 @@ $lastName = $nameParts[1] ?? '';
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Profile picture upload
+            $('#profilePictureInput').on('change', function() {
+                const file = this.files[0];
+                if (!file) return;
+
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Invalid file type. Only JPEG, PNG, and GIF images are allowed.');
+                    return;
+                }
+
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size exceeds 5MB limit.');
+                    return;
+                }
+
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#viewProfilePicture').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+
+                // Upload file
+                const formData = new FormData();
+                formData.append('profile_picture', file);
+
+                $('#uploadProgress').addClass('show');
+                $('#uploadProgress .progress-bar').css('width', '0%');
+
+                $.ajax({
+                    url: '../misc/upload_profile_picture.php',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhr: function() {
+                        const xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', function(e) {
+                            if (e.lengthComputable) {
+                                const percentComplete = (e.loaded / e.total) * 100;
+                                $('#uploadProgress .progress-bar').css('width', percentComplete + '%');
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function(response) {
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                $('#uploadProgress').removeClass('show');
+                                $('#alertContainer').html(
+                                    '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                                    '<i class="fas fa-check-circle me-2"></i>' + result.message +
+                                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                                    '</div>'
+                                );
+                                // Update image source if path is provided
+                                if (result.image_path) {
+                                    $('#viewProfilePicture').attr('src', '../' + result.image_path + '?t=' + new Date().getTime());
+                                }
+                            } else {
+                                $('#uploadProgress').removeClass('show');
+                                $('#alertContainer').html(
+                                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                                    '<i class="fas fa-exclamation-circle me-2"></i>' + result.message +
+                                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                                    '</div>'
+                                );
+                            }
+                        } catch (e) {
+                            $('#uploadProgress').removeClass('show');
+                            $('#alertContainer').html(
+                                '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                                '<i class="fas fa-exclamation-circle me-2"></i>An error occurred. Please try again.' +
+                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                                '</div>'
+                            );
+                        }
+                    },
+                    error: function() {
+                        $('#uploadProgress').removeClass('show');
+                        $('#alertContainer').html(
+                            '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                            '<i class="fas fa-exclamation-circle me-2"></i>An error occurred while uploading. Please try again.' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                            '</div>'
+                        );
+                    }
+                });
+            });
+
             // Toggle between view and edit modes
             $('#editBtn, #cancelBtn, #cancelBtn2').on('click', function() {
                 $('#viewMode').toggle();

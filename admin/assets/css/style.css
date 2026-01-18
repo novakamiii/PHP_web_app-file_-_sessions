@@ -181,6 +181,11 @@ body {
   color: #1e40af;
 }
 
+.status.refunded {
+  background: #f8d7da;
+  color: #842029;
+}
+
 /* Optional: make cards & table vertically spaced */
 .content {
   padding: 30px;

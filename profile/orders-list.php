@@ -1,5 +1,51 @@
 <?php
 include '../misc/headernavfooter.php';
+
+session_start();
+
+// Default order statuses
+$default_statuses = [
+    '1001' => 'delivered',
+    '1002' => 'shipped',
+    '1003' => 'processing',
+    '1004' => 'pending',
+    '1005' => 'shipped',
+    '1006' => 'delivered',
+    '1007' => 'processing',
+    '1008' => 'delivered'
+];
+
+// Initialize order statuses in session if not exists
+if (!isset($_SESSION['order_statuses'])) {
+    $_SESSION['order_statuses'] = $default_statuses;
+}
+
+// Get status with fallback to default
+function getOrderStatus($order_id) {
+    global $default_statuses;
+    if (isset($_SESSION['order_statuses'][$order_id])) {
+        return $_SESSION['order_statuses'][$order_id];
+    }
+    return isset($default_statuses[$order_id]) ? $default_statuses[$order_id] : 'pending';
+}
+
+// Status label mapping
+$status_labels = [
+    'pending' => 'Pending',
+    'processing' => 'Processing',
+    'shipped' => 'Shipped',
+    'delivered' => 'Delivered',
+    'cancelled' => 'Cancelled'
+];
+
+// Status class mapping
+$status_classes = [
+    'pending' => 'status-pending',
+    'processing' => 'status-processing',
+    'shipped' => 'status-shipped',
+    'delivered' => 'status-delivered',
+    'cancelled' => 'status-cancelled'
+];
 ?>
 
 <!DOCTYPE html>
@@ -133,8 +179,8 @@ include '../misc/headernavfooter.php';
                             <small class="text-muted">Placed on January 12, 2025 2:30 PM</small>
                         </div>
                         <div class="text-end">
-                            <div class="order-status status-delivered">
-                                Delivered
+                            <div class="order-status <?php echo $status_classes[getOrderStatus('1001')]; ?>">
+                                <?php echo $status_labels[getOrderStatus('1001')]; ?>
                             </div>
                             <div class="mt-2">
                                 <strong>₱978.00</strong>
@@ -184,8 +230,8 @@ include '../misc/headernavfooter.php';
                             <small class="text-muted">Placed on January 10, 2025 10:15 AM</small>
                         </div>
                         <div class="text-end">
-                            <div class="order-status status-shipped">
-                                Shipped
+                            <div class="order-status <?php echo $status_classes[getOrderStatus('1002')]; ?>">
+                                <?php echo $status_labels[getOrderStatus('1002')]; ?>
                             </div>
                             <div class="mt-2">
                                 <strong>₱599.00</strong>
@@ -221,8 +267,8 @@ include '../misc/headernavfooter.php';
                             <small class="text-muted">Placed on January 8, 2025 4:45 PM</small>
                         </div>
                         <div class="text-end">
-                            <div class="order-status status-processing">
-                                Processing
+                            <div class="order-status <?php echo $status_classes[getOrderStatus('1003')]; ?>">
+                                <?php echo $status_labels[getOrderStatus('1003')]; ?>
                             </div>
                             <div class="mt-2">
                                 <strong>₱1,250.00</strong>
